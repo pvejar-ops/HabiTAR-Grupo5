@@ -35,21 +35,23 @@ class MainActivity : ComponentActivity() {
 fun MainScreen() {
     val navController = rememberNavController()
 
-    // Observamos la ruta actual para saber qué ítem marcar como seleccionado
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
-            // Definimos las rutas donde queremos que aparezca la barra
+            // Definimos todas las pantallas donde la barra DEBE seguir visible
             val pantallasPrincipales = listOf(
                 Screen.Menu.route,
                 Screen.Calendario.route,
-                Screen.Perfil.route
+                Screen.Perfil.route,
+                Screen.Emociones.route,
+                Screen.Sensaciones.route,
+                Screen.Meditacion.route,
+                Screen.Emergencia.route
             )
 
-            // Solo se muestra si la ruta actual está en la lista de principales
             if (currentRoute in pantallasPrincipales) {
                 NavigationBar(
                     containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
@@ -73,13 +75,11 @@ fun MainScreen() {
                             selected = currentRoute == item.route,
                             onClick = {
                                 navController.navigate(item.route) {
-                                    // Evita que se acumulen pantallas en el historial al navegar
+                                    // Corregido: Volvemos a colocar la limpieza de pila
                                     popUpTo(navController.graph.findStartDestination().id) {
                                         saveState = true
                                     }
-                                    // Evita múltiples copias de la misma pantalla
                                     launchSingleTop = true
-                                    // Restaura el estado (scroll, etc.) si ya existía
                                     restoreState = true
                                 }
                             },
@@ -93,7 +93,6 @@ fun MainScreen() {
             }
         }
     ) { innerPadding ->
-        // El NavGraph recibe el padding para que el contenido no quede debajo de la barra
         AppNavGraph(
             navController = navController,
             modifier = Modifier.padding(innerPadding)

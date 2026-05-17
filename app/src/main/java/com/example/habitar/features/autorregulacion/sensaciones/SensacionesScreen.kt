@@ -1,100 +1,244 @@
 package com.example.habitar.features.autorregulacion.sensaciones
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
+/**
+ * Pantalla de Sensaciones Físicas para el proyecto HabiTAR.
+ * Permite al usuario identificar síntomas corporales para recibir pautas de autorregulación.
+ */
 @Composable
-fun SensacionesScreen() {
-    var detalleSensacion by remember { mutableStateOf("") }
-    val sensacionesDisponibles = listOf("Tensión en cuello", "Nudo en el estómago", "Palpitaciones", "Sudoración", "Falta de aire", "Hormigueo")
-    val seleccionadas = remember { mutableStateListOf<String>() }
+fun SensacionesScreen(onNavigateToMenu: () -> Unit) {
 
+    // --- GESTIÓN DE ESTADOS LOCALES ---
+    // detalleSensacion: Almacena la descripción textual ingresada por el usuario.
+    var detalleSensacion by remember { mutableStateOf("") }
+
+    // etiquetasSeleccionadas: Lista reactiva que guarda las sensaciones físicas marcadas.
+    val etiquetasSeleccionadas = remember { mutableStateListOf<String>() }
+
+    // Listado de sensaciones para poblar la interfaz.
+    val sensacionesDisponibles = listOf(
+        "Taquicardia", "Sudoración", "Picazón",
+        "Tensión Muscular", "Náuseas", "Dolor Físico"
+    )
+
+    // Contenedor principal con scroll vertical para evitar cortes en pantallas pequeñas.
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
+            .fillMaxSize() // Expande el contenedor a todo el espacio disponible.
+            .verticalScroll(rememberScrollState()) // Activa el desplazamiento si el contenido crece.
+            .padding(24.dp), // Margen de seguridad de 24dp en todos los bordes.
+        horizontalAlignment = Alignment.CenterHorizontally // Centra los componentes hijos horizontalmente.
     ) {
-        Text(
-            text = "Sensaciones Físicas",
-            style = MaterialTheme.typography.headlineSmall,
-            fontWeight = FontWeight.Bold
-        )
 
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Text(
-            text = "¿Qué está sintiendo tu cuerpo ahora?",
-            style = MaterialTheme.typography.bodyMedium
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // 1. Selector de sensaciones (Chips)
-        LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.fillMaxWidth()
+        // --- FUNCIÓN: BOTÓN VOLVER ---
+        IconButton(
+            onClick = onNavigateToMenu,
+            modifier = Modifier
+                .background(color = Color(0xFFF3EDF7), shape = CircleShape) // Fondo circular lila suave.
+                .size(48.dp) // Tamaño fijo del área de click.
+                .align(Alignment.Start) // Posiciona el botón al inicio (izquierda) de la columna.
         ) {
-            items(sensacionesDisponibles) { sensacion ->
-                val estaSeleccionada = seleccionadas.contains(sensacion)
-                Surface(
-                    shape = RoundedCornerShape(20.dp),
-                    color = if (estaSeleccionada) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant,
-                    modifier = Modifier.clickable {
-                        if (estaSeleccionada) seleccionadas.remove(sensacion)
-                        else seleccionadas.add(sensacion)
-                    }
+            Icon(
+                imageVector = Icons.Default.ArrowBack,
+                contentDescription = "Volver",
+                tint = Color(0xFF928AF0) // Color lila base del módulo Sensaciones.
+            )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp)) // Espaciado de 16dp entre el botón y el título.
+
+        // --- FUNCIÓN: TÍTULO PRINCIPAL ---
+        Text(
+            text = "Sensaciones físicas",
+            style = MaterialTheme.typography.titleLarge,
+            color = Color.White,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .fillMaxWidth() // Asegura que el fondo lila cruce toda la pantalla.
+                .background(color = Color(0xFF9291F3), shape = CircleShape) // Cápsula de color sólido.
+                .padding(vertical = 12.dp) // Espaciado interno para dar altura a la barra de título.
+        )
+
+        // Subtítulo explicativo del propósito de la pantalla.
+        Text(
+            text = "Chat con IA que te permite autorregularte",
+            style = MaterialTheme.typography.bodyMedium,
+            color = Color.Gray,
+            modifier = Modifier.padding(vertical = 16.dp), // Separación vertical de 16dp.
+            textAlign = TextAlign.Center
+        )
+
+        // Instrucción directa con margen inferior para separar de los chips.
+        Text(
+            text = "Selecciona las sensaciones que te identifiquen en este momento",
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
+
+        // --- FUNCIÓN: CUADRÍCULA DE SELECCIÓN (GRID) ---
+        Column(modifier = Modifier.fillMaxWidth()) {
+            // Se agrupan los elementos de 3 en 3 para formar las filas de la cuadrícula.
+            val chunks = sensacionesDisponibles.chunked(3)
+            chunks.forEach { fila ->
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp), // Espaciado entre filas.
+                    horizontalArrangement = Arrangement.spacedBy(8.dp) // Espaciado horizontal de 8dp entre chips.
                 ) {
-                    Text(
-                        text = sensacion,
-                        color = if (estaSeleccionada) Color.White else MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                        style = MaterialTheme.typography.bodySmall
-                    )
+                    fila.forEach { etiqueta ->
+                        val estaSeleccionada = etiquetasSeleccionadas.contains(etiqueta)
+                        SensacionChip(
+                            text = etiqueta,
+                            isSelected = estaSeleccionada,
+                            modifier = Modifier.weight(1f), // Distribuye el ancho equitativamente (33% cada uno).
+                            onCheckedChange = {
+                                // Lógica de alternancia para la lista de estados.
+                                if (estaSeleccionada) etiquetasSeleccionadas.remove(etiqueta)
+                                else etiquetasSeleccionadas.add(etiqueta)
+                            }
+                        )
+                    }
                 }
             }
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(24.dp)) // Espacio de 24dp antes de la entrada de texto.
 
-        // 2. Descripción libre
+        // --- FUNCIÓN: BARRA DE TÍTULO DE ESCRITURA ---
+        Text(
+            text = "Escribe lo que sientes...",
+            style = MaterialTheme.typography.titleSmall,
+            fontWeight = FontWeight.Bold,
+            color = Color.DarkGray,
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(color = Color(0xFFE0E0E0), shape = CircleShape) // Fondo gris neutro.
+                .padding(vertical = 8.dp), // Padding interno para centrar el texto verticalmente.
+            textAlign = TextAlign.Center
+        )
+
+        // --- FUNCIÓN: CAMPO DE TEXTO (USER INPUT) ---
         OutlinedTextField(
             value = detalleSensacion,
             onValueChange = { detalleSensacion = it },
-            label = { Text("Describe más sobre esta sensación...") },
-            modifier = Modifier.fillMaxWidth(),
-            minLines = 3
+            placeholder = { Text("Escribe aquí...", textAlign = TextAlign.Center) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 12.dp), // Margen vertical para no tocar el título ni el botón.
+            shape = RoundedCornerShape(16.dp), // Bordes redondeados de 16dp.
+            colors = OutlinedTextFieldDefaults.colors(
+                unfocusedBorderColor = Color(0xFFE0E0E0), // Gris cuando no hay foco.
+                focusedBorderColor = Color(0xFF9291F3)    // Lila cuando el usuario está escribiendo.
+            )
+        )
+
+        // --- FUNCIÓN: BOTÓN DE ACCIÓN PARA IA ---
+        Button(
+            onClick = { /* Aquí se conectará con el ViewModel/Repository para la IA */ },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            shape = CircleShape, // Botón completamente redondeado.
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFF928AF0), // Lila base.
+                contentColor = Color.White        // Texto blanco.
+            ),
+            // El botón se habilita si hay texto O si hay al menos un chip seleccionado.
+            enabled = detalleSensacion.isNotBlank() || etiquetasSeleccionadas.isNotEmpty()
+        ) {
+            Text("Pedir consejo al Avatar", fontWeight = FontWeight.Bold)
+        }
+
+        // Línea decorativa para separar visualmente la entrada de la respuesta.
+        Box(
+            modifier = Modifier
+                .width(200.dp)
+                .height(4.dp)
+                .background(color = Color(0xFF9291F3), shape = CircleShape)
         )
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // 3. Botón de acción
-        Button(
-            onClick = { /* Lógica para Gemini */ },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Analizar sensaciones con la IA")
-        }
+        // --- FUNCIÓN: ÁREA DE RESPUESTA ---
+        Text(
+            text = "Respuesta IA",
+            style = MaterialTheme.typography.titleSmall,
+            fontWeight = FontWeight.Bold,
+            color = Color.DarkGray,
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(color = Color(0xFFF3EDF7), shape = CircleShape) // Fondo lila muy claro.
+                .padding(vertical = 8.dp),
+            textAlign = TextAlign.Center
+        )
 
-        Spacer(modifier = Modifier.height(24.dp))
-
-        // 4. Card de Respuesta (Placeholder)
         Card(
-            modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.3f))
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 12.dp),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(containerColor = Color(0xFFF8F8F8)), // Fondo gris suave.
+            elevation = CardDefaults.cardElevation(2.dp) // Elevación mínima para efecto de sombra.
         ) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                Text(text = "Análisis del Avatar:", fontWeight = FontWeight.Bold)
-                Text(text = "Tu cuerpo está reaccionando. Vamos a realizar un ejercicio de escaneo corporal para relajar esas zonas...", style = MaterialTheme.typography.bodyMedium)
+            Column(modifier = Modifier.padding(16.dp)) { // Margen interno de la tarjeta para el texto de respuesta.
+                Text(
+                    text = "Aquí aparecerá el consejo de la IA basado en tus sensaciones.",
+                    style = MaterialTheme.typography.bodyMedium
+                )
             }
         }
+    }
+}
+
+/**
+ * Componente personalizado para los Chips de Sensación.
+ * @param text Etiqueta a mostrar.
+ * @param isSelected Define el estado visual (invertido).
+ */
+@Composable
+fun SensacionChip(
+    text: String,
+    isSelected: Boolean,
+    modifier: Modifier = Modifier,
+    onCheckedChange: () -> Unit
+) {
+    Surface(
+        shape = CircleShape,
+        // Lógica de color invertida solicitada:
+        // No seleccionado: Color lila fuerte (0xFF928AF0).
+        // Seleccionado: Color lila claro (0xFFF3EDF7).
+        color = if (isSelected) Color(0xFFF3EDF7) else Color(0xFF928AF0),
+        modifier = modifier.clickable { onCheckedChange() } // Captura el evento de tacto.
+    ) {
+        Text(
+            text = text,
+            // Ajuste de contraste dinámico para el texto.
+            color = if (isSelected) Color(0xFF6750A4) else Color.White,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(vertical = 8.dp, horizontal = 4.dp), // Espaciado interno del chip.
+            style = MaterialTheme.typography.labelLarge,
+            fontWeight = FontWeight.Bold
+        )
     }
 }

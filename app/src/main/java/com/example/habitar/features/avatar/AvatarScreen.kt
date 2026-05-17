@@ -11,7 +11,8 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun AvatarScreen(
-    onNavigateToMenu: () -> Unit // Cambiado para que coincida con el NavGraph
+    onNavigateToIA: () -> Unit, // <--- DEBES AGREGAR ESTO
+    onAuthSuccess: () -> Unit   // También este si lo vas a usar
 ) {
     Column(
         modifier = Modifier
@@ -42,7 +43,7 @@ fun AvatarScreen(
 
         Button(
                 // Aquí iría la lógica de guardado en Supabase más adelante
-                onClick = onNavigateToMenu,
+                onClick = onNavigateToIA,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 16.dp), // Espacio extra del borde inferior

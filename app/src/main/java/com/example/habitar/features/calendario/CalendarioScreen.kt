@@ -1,102 +1,159 @@
 package com.example.habitar.features.calendario
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.material.icons.filled.Add
+import androidx.compose.ui.unit.sp
+import java.time.LocalDate
+import java.time.YearMonth
+import java.time.format.TextStyle
+import java.util.Locale
 
 @Composable
-fun CalendarioScreen(onNavigateToOrganizaDia: () -> Unit) { // 1. Recibe la función
+fun CalendarioScreen(onNavigateToMenu: () -> Unit,
+                     OnNavigateToTodo: () -> Unit) {
+    // --- LÓGICA DE NAVEGACIÓN DEL MES ---
+    // Guardamos el mes actual que se está visualizando
+    var mesActual by remember { mutableStateOf(YearMonth.now()) }
+
+    // Colores de tu paleta
+    val moradoPrincipal = Color(0xFF6750A4)
+    val lilaSeleccion = Color(0xFFD671F5)
+    val grisBorde = Color(0xFFE0E0E0)
+
+    val hoyReal = LocalDate.now()
+
     Scaffold(
-        floatingActionButton = {
-            ExtendedFloatingActionButton(
-                onClick = onNavigateToOrganizaDia, // 2. Al hacer clic, navega
-                icon = { Icon(Icons.Default.Add, "Añadir") },
-                text = { Text("Organiza tu día") },
-                containerColor = MaterialTheme.colorScheme.primaryContainer
-            )
+        topBar = {
+            IconButton(onClick = onNavigateToMenu, modifier = Modifier.padding(8.dp)) {
+                Icon(Icons.Default.ArrowBack, contentDescription = "Atrás")
+            }
         }
-    ) { padding -> Column(modifier = Modifier.padding(padding)) {
+    ) { padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp)
+                .padding(padding)
+                .padding(horizontal = 24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            // --- TÍTULO ---
             Text(
-                text = "Mi Historial",
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = "Revisa cómo te has sentido últimamente",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.secondary
+                text = "Control Mensual",
+                color = Color.White,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(moradoPrincipal, CircleShape)
+                    .padding(vertical = 12.dp),
+                textAlign = TextAlign.Center
             )
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Simulación de una lista de registros diarios
-            val registros = listOf(
-                RegistroDia("Hoy", "Calma", MaterialTheme.colorScheme.primaryContainer),
-                RegistroDia("Ayer", "Ansiedad", MaterialTheme.colorScheme.errorContainer),
-                RegistroDia("Lunes 28", "Felicidad", MaterialTheme.colorScheme.tertiaryContainer),
-                RegistroDia("Domingo 27", "Tristeza", MaterialTheme.colorScheme.secondaryContainer)
-            )
-
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+            // --- TARJETA DEL CALENDARIO ---
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(24.dp),
+                colors = CardDefaults.cardColors(containerColor = Color.White),
+                elevation = CardDefaults.cardElevation(2.dp)
             ) {
-                items(registros) { registro ->
-                    ItemCalendario(registro)
+                Column(modifier = Modifier.padding(16.dp)) {
+
+                    // --- CABECERA DINÁMICA ---
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        // Muestra el nombre del mes y año según el estado 'mesActual'
+                        Text(
+                            text = "${mesActual.month.getDisplayName(TextStyle.FULL, Locale("es", "CL")).replaceFirstChar { it.uppercase() }} ${mesActual.year}",
+                            fontWeight = FontWeight.ExtraBold,
+                            fontSize = 22.sp
+                        )
+                        Row {
+                            // Al hacer clic, restamos un mes al estado
+                            IconButton(onClick = { mesActual = mesActual.minusMonths(1) }) {
+                                Icon(Icons.Default.KeyboardArrowLeft, "Anterior", tint = Color.Gray)
+                            }
+                            // Al hacer clic, sumamos un mes al estado
+                            IconButton(onClick = { mesActual = mesActual.plusMonths(1) }) {
+                                Icon(Icons.Default.KeyboardArrowRight, "Siguiente")
+                            }
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    // Días de la semana (Cabecera)
+                    val diasSemana = listOf("Lu", "Ma", "Mi", "Ju", "Vi", "Sa", "Su")
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        diasSemana.forEach { dia ->
+                            Text(dia, Modifier.weight(1f), textAlign = TextAlign.Center, fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    // --- CÁLCULO DE LA GRILLA ---
+                    val diasEnMes = mesActual.lengthOfMonth()
+                    // Calculamos en qué día de la semana empieza el día 1 (1 = Lunes, 7 = Domingo)
+                    val primerDiaSemana = mesActual.atDay(1).dayOfWeek.value
+                    val espaciosVacios = primerDiaSemana - 1
+
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(7),
+                        modifier = Modifier.height(260.dp),
+                        userScrollEnabled = false
+                    ) {
+                        // 1. Celdas vacías del mes anterior
+                        items(espaciosVacios) {
+                            Box(Modifier.aspectRatio(1f).border(0.5.dp, grisBorde))
+                        }
+
+                        // 2. Días del mes actual
+                        items(diasEnMes) { diaIdx ->
+                            val dia = diaIdx + 1
+                            // Aquí podrías marcar el día de hoy o días con registros
+                            val esHoy = dia == 18 && mesActual == YearMonth.now()
+
+                            Box(
+                                modifier = Modifier
+                                    .aspectRatio(1f)
+                                    .border(0.5.dp, grisBorde)
+                                    .background(if (esHoy) lilaSeleccion else Color.Transparent)
+                                    .clickable { /* Aquí abrirías el historial de ese día */ },
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = dia.toString(),
+                                    color = if (esHoy) Color.White else Color.Black,
+                                    fontSize = 14.sp
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }
     }
-    }
-    }
-
-@Composable
-fun ItemCalendario(registro: RegistroDia) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            // Círculo de color que representa la emoción
-            Box(
-                modifier = Modifier
-                    .size(40.dp)
-                    .clip(CircleShape)
-                    .background(registro.color)
-            )
-
-            Spacer(modifier = Modifier.width(16.dp))
-
-            Column {
-                Text(text = registro.fecha, fontWeight = FontWeight.Bold)
-                Text(text = "Estado: ${registro.emocion}", style = MaterialTheme.typography.bodySmall)
-            }
-        }
-    }
 }
-
-// Clase de datos para los registros
-data class RegistroDia(val fecha: String, val emocion: String, val color: androidx.compose.ui.graphics.Color)
