@@ -49,7 +49,8 @@ fun MainScreen() {
                 Screen.Emociones.route,
                 Screen.Sensaciones.route,
                 Screen.Meditacion.route,
-                Screen.Emergencia.route
+                Screen.Emergencia.route,
+                Screen.OrganizaDia.route
             )
 
             if (currentRoute in pantallasPrincipales) {
@@ -60,6 +61,7 @@ fun MainScreen() {
                     val items = listOf(
                         BottomBarItem.Menu,
                         BottomBarItem.Calendario,
+                        BottomBarItem.OrganizaDia,
                         BottomBarItem.Perfil
                     )
 
@@ -72,10 +74,14 @@ fun MainScreen() {
                                 )
                             },
                             label = { Text(text = item.title) },
-                            selected = currentRoute == item.route,
+                            //selected = currentRoute == item.route,
+                            selected = currentRoute?.startsWith(item.route.substringBefore("?")) == true,
                             onClick = {
-                                navController.navigate(item.route) {
-                                    // Corregido: Volvemos a colocar la limpieza de pila
+                                // Limpiamos la ruta para que siempre apunte a la pantalla base
+                                // y no intente pasar parámetros nulos o incorrectos al navegar desde la barra
+                                val routeBase = item.route.substringBefore("?")
+
+                                navController.navigate(routeBase) {
                                     popUpTo(navController.graph.findStartDestination().id) {
                                         saveState = true
                                     }

@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+    id("org.jetbrains.kotlin.plugin.serialization")
 }
 
 android {
@@ -60,4 +61,11 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.8.0")
     implementation("androidx.compose.material:material-icons-core")
     implementation("androidx.compose.material:material-icons-extended")
+    // BDD Supabase
+    implementation("io.github.jan-tennert.supabase:postgrest-kt:2.6.1") // Para interactuar con las tablas
+    implementation("io.github.jan-tennert.supabase:gotrue-kt:2.6.1")    // Para la autenticación!!
+    implementation("io.ktor:ktor-client-android:2.3.11") // Motor HTTP de Ktor requerido por Supabase para realizar peticiones de red
+    implementation("io.coil-kt:coil-compose:2.6.0")
+    implementation("androidx.media3:media3-exoplayer:1.3.1")
+    implementation("androidx.media3:media3-ui:1.3.1")
 }

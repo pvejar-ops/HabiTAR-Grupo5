@@ -12,22 +12,40 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 
 @Composable
-fun PerfilScreen() {
+fun PerfilScreen(
+    navController: NavController,
+    viewModel: PerfilViewModel = viewModel()
+) {
+    val perfil = viewModel.perfil
+    val estaCargando = viewModel.estaCargando
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Spacer(modifier = Modifier.height(24.dp))
         Text(
             text = "Mi Perfil",
-            style = MaterialTheme.typography.headlineSmall,
-            fontWeight = FontWeight.Bold
+            color = Color.White,
+            fontWeight = FontWeight.Bold,
+            fontSize = 20.sp,
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(color = Color(0xFF6750A4), shape = CircleShape)
+                .padding(vertical = 12.dp),
+            textAlign = TextAlign.Center
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -50,23 +68,46 @@ fun PerfilScreen() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // 2. Información del Usuario
-        Text(text = "Nombre del Usuario", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
-        Text(text = "Estudiante de Diseño / 22 años", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.secondary)
+        if (estaCargando) {
+            CircularProgressIndicator()
+        } else if (perfil != null) {
+            Text(text = perfil.nombre_usuario, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+
+            // Usamos un manejo seguro para la carrera (por si es nula en la BDD)
+            val infoCarrera = perfil.carrera ?: "Sin carrera definida"
+            Text(
+                text = "$infoCarrera / ${perfil.edad} años",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.secondary
+            )
+            Text(
+                text = "Correo: ${perfil.correo_electronico}",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.secondary
+            )
+        } else {
+            Text("No se pudo cargar el perfil.")
+        }
 
         Spacer(modifier = Modifier.height(32.dp))
+
 
         // 3. Opciones de Configuración
         Column(modifier = Modifier.fillMaxWidth()) {
             PerfilOptionItem(titulo = "Editar Perfil", icono = Icons.Default.Edit)
-            PerfilOptionItem(titulo = "Ajustes de la App", icono = Icons.Default.Settings)
+            //PerfilOptionItem(titulo = "Ajustes de la App", icono = Icons.Default.Settings)
         }
 
         Spacer(modifier = Modifier.weight(1f))
 
         // 4. Botón de Cerrar Sesión
         Button(
-            onClick = { /* Lógica de Logout */ },
+            onClick = { viewModel.cerrarSesion {
+                // Navega al Login, por ejemplo:
+                navController.navigate("inicio_screen") {
+                    popUpTo(0) { inclusive = true } // Limpia la pila de navegación
+                }
+            } },
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
             modifier = Modifier.fillMaxWidth()
         ) {
