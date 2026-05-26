@@ -17,27 +17,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 
-/**
- * Pantalla de Sensaciones Físicas para el proyecto HabiTAR.
- * Permite al usuario identificar síntomas corporales para recibir pautas de autorregulación.
- */
+/** Pantalla de Sensaciones Físicas para el proyecto HabiTAR.
+ * Permite al usuario identificar síntomas corporales para recibir pautas de autorregulación.*/
+
 @Composable
-fun SensacionesScreen(onNavigateToMenu: () -> Unit) {
-
-    // --- GESTIÓN DE ESTADOS LOCALES ---
-    // detalleSensacion: Almacena la descripción textual ingresada por el usuario.
-    var detalleSensacion by remember { mutableStateOf("") }
-
-    // etiquetasSeleccionadas: Lista reactiva que guarda las sensaciones físicas marcadas.
-    val etiquetasSeleccionadas = remember { mutableStateListOf<String>() }
-
+fun SensacionesScreen(
+    onNavigateToMenu: () -> Unit,
+    viewModel: SensacionesViewModel = viewModel()
+) {
     // Listado de sensaciones para poblar la interfaz.
     val sensacionesDisponibles = listOf(
         "Taquicardia", "Sudoración", "Picazón",
         "Tensión Muscular", "Náuseas", "Dolor Físico"
     )
-
     // Contenedor principal con scroll vertical para evitar cortes en pantallas pequeñas.
     Column(
         modifier = Modifier
@@ -107,15 +101,13 @@ fun SensacionesScreen(onNavigateToMenu: () -> Unit) {
                     horizontalArrangement = Arrangement.spacedBy(8.dp) // Espaciado horizontal de 8dp entre chips.
                 ) {
                     fila.forEach { etiqueta ->
-                        val estaSeleccionada = etiquetasSeleccionadas.contains(etiqueta)
+                        val estaSeleccionada = viewModel.sensacionesSeleccionadas.contains(etiqueta)
                         SensacionChip(
                             text = etiqueta,
                             isSelected = estaSeleccionada,
                             modifier = Modifier.weight(1f), // Distribuye el ancho equitativamente (33% cada uno).
                             onCheckedChange = {
-                                // Lógica de alternancia para la lista de estados.
-                                if (estaSeleccionada) etiquetasSeleccionadas.remove(etiqueta)
-                                else etiquetasSeleccionadas.add(etiqueta)
+                                viewModel.alternarSensacion(etiqueta) //función que refresca el estado en el ViewModel
                             }
                         )
                     }
@@ -140,13 +132,15 @@ fun SensacionesScreen(onNavigateToMenu: () -> Unit) {
 
         // --- FUNCIÓN: CAMPO DE TEXTO (USER INPUT) ---
         OutlinedTextField(
-            value = detalleSensacion,
-            onValueChange = { detalleSensacion = it },
+            value = viewModel.comentarioUsuario,
+            onValueChange = { viewModel.comentarioUsuario = it },
             placeholder = { Text("Escribe aquí...", textAlign = TextAlign.Center) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 12.dp), // Margen vertical para no tocar el título ni el botón.
             shape = RoundedCornerShape(16.dp), // Bordes redondeados de 16dp.
+            singleLine = false, // Permite múltiples líneas por si describe varios síntomas con calma
+            maxLines = 4,
             colors = OutlinedTextFieldDefaults.colors(
                 unfocusedBorderColor = Color(0xFFE0E0E0), // Gris cuando no hay foco.
                 focusedBorderColor = Color(0xFF9291F3)    // Lila cuando el usuario está escribiendo.
@@ -155,7 +149,7 @@ fun SensacionesScreen(onNavigateToMenu: () -> Unit) {
 
         // --- FUNCIÓN: BOTÓN DE ACCIÓN PARA IA ---
         Button(
-            onClick = { /* Aquí se conectará con el ViewModel/Repository para la IA */ },
+            onClick = { viewModel.enviarFormularioSensaciones() },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp),
@@ -164,10 +158,11 @@ fun SensacionesScreen(onNavigateToMenu: () -> Unit) {
                 containerColor = Color(0xFF928AF0), // Lila base.
                 contentColor = Color.White        // Texto blanco.
             ),
-            // El botón se habilita si hay texto O si hay al menos un chip seleccionado.
-            enabled = detalleSensacion.isNotBlank() || etiquetasSeleccionadas.isNotEmpty()
+            // Se inhabilita mientras procesa o si todo está vacío
+            enabled = !viewModel.estaProcesando &&
+                    (viewModel.comentarioUsuario.isNotBlank() || viewModel.sensacionesSeleccionadas.isNotEmpty())
         ) {
-            Text("Pedir consejo al Avatar", fontWeight = FontWeight.Bold)
+            Text("Pedir consejo a HabiTAR", fontWeight = FontWeight.Bold)
         }
 
         // Línea decorativa para separar visualmente la entrada de la respuesta.
@@ -177,6 +172,17 @@ fun SensacionesScreen(onNavigateToMenu: () -> Unit) {
                 .height(4.dp)
                 .background(color = Color(0xFF9291F3), shape = CircleShape)
         )
+
+        // Muestra errores en rojo en la UI si la red o Supabase fallan
+        if (viewModel.mensajeError != null) {
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = viewModel.mensajeError ?: "",
+                color = Color.Red,
+                fontWeight = FontWeight.Medium,
+                textAlign = TextAlign.Center
+            )
+        }
 
         Spacer(modifier = Modifier.height(24.dp))
 
@@ -203,7 +209,9 @@ fun SensacionesScreen(onNavigateToMenu: () -> Unit) {
         ) {
             Column(modifier = Modifier.padding(16.dp)) { // Margen interno de la tarjeta para el texto de respuesta.
                 Text(
-                    text = "Aquí aparecerá el consejo de la IA basado en tus sensaciones.",
+                    text = viewModel.respuestaIA_Visualizar.ifBlank {
+                        "Aquí aparecerá el consejo de la IA basado en tus sensaciones."
+                    },
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
@@ -225,9 +233,6 @@ fun SensacionChip(
 ) {
     Surface(
         shape = CircleShape,
-        // Lógica de color invertida solicitada:
-        // No seleccionado: Color lila fuerte (0xFF928AF0).
-        // Seleccionado: Color lila claro (0xFFF3EDF7).
         color = if (isSelected) Color(0xFFF3EDF7) else Color(0xFF928AF0),
         modifier = modifier.clickable { onCheckedChange() } // Captura el evento de tacto.
     ) {

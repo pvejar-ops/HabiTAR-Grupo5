@@ -14,11 +14,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.sp
 import com.example.habitar.core.ui.componentes.AppButton
 
 @Composable
 fun MenuScreen(
-    // Funciones Lambda: Permiten que el NavHost controle hacia dónde va el usuario al hacer clic.
+    //Permiten que el NavHost controle hacia dónde va el usuario al hacer clic.
     onNavigateToEmociones: () -> Unit,
     onNavigateToMeditacion: () -> Unit,
     onNavigateToEmergencia: () -> Unit,
@@ -27,36 +28,36 @@ fun MenuScreen(
     // Column: Organiza los elementos de forma vertical uno debajo del otro.
     Column(
         modifier = Modifier
-            .fillMaxSize() // Indica que la columna debe ocupar todo el alto y ancho de la pantalla.
+            .fillMaxSize()
             .verticalScroll(rememberScrollState()) // Habilita el desplazamiento si el contenido es más alto que la pantalla.
-            .padding(24.dp), // Agrega un margen de seguridad de 24dp en todos los bordes.
+            .padding(top = 40.dp, start = 24.dp, end = 24.dp, bottom = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally // Centra todos los componentes hijos horizontalmente.
     ) {
-        // --- TÍTULO TIPO CÁPSULA ---
-        Text(
-            text = "Módulos de ayuda",
-            style = MaterialTheme.typography.titleMedium, // Aplica el estilo de texto predefinido de Material3.
-            color = Color.White, // Define el color del texto como blanco.
-            fontWeight = FontWeight.Bold, // Aplica negrita para resaltar el título.
-            modifier = Modifier
-                .padding(vertical = 8.dp) // Margen externo para separar el título de otros elementos.
-                .background(
-                    color = Color(0xFF6750A4), // Fondo de color morado sólido (Hexadecimal).
-                    shape = CircleShape // Corta el fondo en forma circular/cápsula.
-                )
-                .padding(horizontal = 24.dp, vertical = 12.dp) // Padding interno: espacio entre el texto y el borde morado.
-        )
+        // --- TÍTULO TIPO CÁPSULA
+        Spacer(modifier = Modifier.height(16.dp))
 
-        // Subtítulo explicativo debajo del título principal.
         Text(
-            text = "Selecciona un módulo de autoregulación",
-            style = MaterialTheme.typography.bodyLarge, // Estilo de texto un poco más pequeño que el título.
-            fontWeight = FontWeight.Medium, // Grosor de fuente intermedio.
-            textAlign = TextAlign.Center, // Alinea el contenido del texto al centro.
+            text = "Módulos de autorregulación",
+            color = Color.White,
+            fontWeight = FontWeight.Bold,
+            fontSize = 20.sp,
             modifier = Modifier
-                .fillMaxWidth() // Expande el contenedor para que el centrado sea efectivo.
-                .padding(top = 16.dp, bottom = 24.dp) // Espaciado específico para separar del título y de los botones.
+                .fillMaxWidth(0.85f)
+                .background(color = Color(0xFF6750A4), shape = CircleShape)
+                .padding(vertical = 12.dp),
+            textAlign = TextAlign.Center
         )
+        Text(
+            text = "Selecciona el módulo que se adapte a lo que necesitas",
+            style = MaterialTheme.typography.bodyMedium,
+            fontSize = 16.sp,
+            color = Color.Gray,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            textAlign = TextAlign.Center
+        )
+        Spacer(modifier = Modifier.height(16.dp))
 
         // --- BLOQUES DE NAVEGACIÓN (Basados en image_71c9c7.png) ---
 
@@ -65,7 +66,7 @@ fun MenuScreen(
             text = "Emociones",
             onClick = onNavigateToEmociones, // Ejecuta la navegación hacia la pantalla de emociones.
             modifier = Modifier
-                .fillMaxWidth() // Hace que el botón use todo el ancho disponible.
+                .fillMaxWidth()
                 .height(90.dp), // Altura fija de 90dp para darle aspecto de bloque/tarjeta.
             shape = RoundedCornerShape(16.dp), // Bordes suavizados con un radio de 16dp.
             colors = ButtonDefaults.buttonColors(
@@ -73,7 +74,6 @@ fun MenuScreen(
             )
         )
 
-        // Spacer: Crea un espacio vacío de 16dp entre los botones para que no se vean pegados.
         Spacer(modifier = Modifier.height(16.dp))
 
         // AppButton (Sensaciones): Bloque de color lila suave.
