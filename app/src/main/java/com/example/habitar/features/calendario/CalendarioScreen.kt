@@ -7,10 +7,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
@@ -52,11 +50,9 @@ fun CalendarioScreen(
     ) { padding ->
         Column(
             modifier = Modifier
-                .fillMaxSize() // 1. Ocupa toda la pantalla
-                .verticalScroll(rememberScrollState()) // 2. El scroll va primero para manejar el contenido dinámico
-                .padding(all = 24.dp) // 3. El margen de la pantalla
-                .imePadding(), // 4. 💡 EL IME VA AL FINAL. Así empuja el contenedor real desde la base del teclado
-            horizontalAlignment = Alignment.CenterHorizontally
+                .fillMaxSize()
+                .padding(padding)
+                .padding(horizontal = 24.dp)
         ) {
             // --- BOTÓN VOLVER (Idéntico a Organiza) ---
             IconButton(

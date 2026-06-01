@@ -26,34 +26,34 @@ fun EmocionesScreen(
     onNavigateToMenu: () -> Unit,
     viewModel: EmocionesViewModel = viewModel()
 ) {
+    //var textoEmocion by remember { mutableStateOf("") }
+    //val etiquetasSeleccionadas = remember { mutableStateListOf<String>() }
     val etiquetasDisponibles = listOf("Feliz", "Eufórico", "Confundido", "Triste", "Enojado", "Frustrado")
 
-    // CONTENEDOR PRINCIPAL: Ahora maneja el padding de forma limpia
     Column(
         modifier = Modifier
-            .fillMaxSize() // 1. Ocupa toda la pantalla
-            .verticalScroll(rememberScrollState()) // 2. El scroll va primero para manejar el contenido dinámico
-            .padding(all = 24.dp) // 3. El margen de la pantalla
-            .imePadding(), // 4. 💡 EL IME VA AL FINAL. Así empuja el contenedor real desde la base del teclado
-        horizontalAlignment = Alignment.CenterHorizontally
+            .fillMaxSize() // Ocupa todo el ancho y alto disponible de la pantalla.
+            .verticalScroll(rememberScrollState()) // Habilita el scroll si el contenido excede la pantalla.
+            .padding(24.dp), // Margen interno general para que el contenido no toque los bordes físicos.
+        horizontalAlignment = Alignment.CenterHorizontally // Alinea los hijos al centro horizontal.
     ) {
 
         // --- COMPONENTE: BOTÓN VOLVER ---
         IconButton(
             onClick = onNavigateToMenu,
             modifier = Modifier
-                .background(color = Color(0xFFF3EDF7), shape = CircleShape)
-                .size(48.dp)
-                .align(Alignment.Start)
+                .background(color = Color(0xFFF3EDF7), shape = CircleShape) // Fondo lila claro circular.
+                .size(48.dp) // Define un tamaño fijo de 48dp para el área del botón.
+                .align(Alignment.Start) // Fuerza a este botón específico a alinearse a la izquierda.
         ) {
             Icon(
                 imageVector = Icons.Default.ArrowBack,
                 contentDescription = "Volver",
-                tint = Color(0xFFD671F5)
+                tint = Color(0xFFD671F5) // Color rosa distintivo del módulo.
             )
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(8.dp)) // Espacio vacío vertical entre el botón y el título.
 
         // --- COMPONENTE: TÍTULO PRINCIPAL ---
         Text(
@@ -63,12 +63,12 @@ fun EmocionesScreen(
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
             modifier = Modifier
-                .fillMaxWidth()
-                .background(color = Color(0xFFD671F5), shape = CircleShape)
-                .padding(vertical = 12.dp)
+                .fillMaxWidth() // El fondo rosa ocupa todo el ancho disponible.
+                .background(color = Color(0xFFD671F5), shape = CircleShape) // Fondo rosa con bordes redondeados.
+                .padding(vertical = 12.dp) // Espaciado interno arriba y abajo del texto para darle aire.
         )
 
-        // Subtítulo descriptivo
+        // Subtítulo descriptivo con padding vertical para separarlo de los otros bloques.
         Text(
             text = "Chat con IA que te permite autorregularte",
             style = MaterialTheme.typography.bodyMedium,
@@ -77,7 +77,7 @@ fun EmocionesScreen(
             textAlign = TextAlign.Center
         )
 
-        // Instrucción
+        // Instrucción para el usuario con padding inferior.
         Text(
             text = "Selecciona las emociones que te identifiquen en este momento",
             style = MaterialTheme.typography.titleMedium,
@@ -86,26 +86,28 @@ fun EmocionesScreen(
             modifier = Modifier.padding(bottom = 16.dp)
         )
 
-        // --- COMPONENTE: GRID DE EMOCIONES (Optimizado sin la columna extra) ---
-        // Quitamos el Modifier.fillMaxWidth() conflictivo de este bloque
-        val chunks = etiquetasDisponibles.chunked(3)
-        chunks.forEach { fila ->
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 4.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                fila.forEach { etiqueta ->
-                    val estaSeleccionada = viewModel.emocionesSeleccionadas.contains(etiqueta)
-                    EmotionChip(
-                        text = etiqueta,
-                        isSelected = estaSeleccionada,
-                        modifier = Modifier.weight(1f),
-                        onCheckedChange = {
-                            viewModel.alternarEmocion(etiqueta)
-                        }
-                    )
+        // --- COMPONENTE: GRID DE EMOCIONES ---
+        Column(modifier = Modifier.fillMaxWidth()) {
+            // Divide la lista de 6 emociones en 2 filas de 3 columnas cada una.
+            val chunks = etiquetasDisponibles.chunked(3)
+            chunks.forEach { fila ->
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp), // Espacio entre las filas de etiquetas.
+                    horizontalArrangement = Arrangement.spacedBy(8.dp) // Espacio horizontal entre cada etiqueta.
+                ) {
+                    fila.forEach { etiqueta ->
+                        val estaSeleccionada = viewModel.emocionesSeleccionadas.contains(etiqueta)
+                        EmotionChip(
+                            text = etiqueta,
+                            isSelected = estaSeleccionada,
+                            modifier = Modifier.weight(1f), // Hace que todas las etiquetas midan lo mismo.
+                            onCheckedChange = {
+                                viewModel.alternarEmocion(etiqueta)
+                            }
+                        )
+                    }
                 }
             }
         }

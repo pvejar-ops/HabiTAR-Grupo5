@@ -95,7 +95,6 @@ fun MeditacionScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .imePadding()
             .background(animatedBgColor) // Usamos el color animado
             .verticalScroll(rememberScrollState())
             .padding(24.dp),

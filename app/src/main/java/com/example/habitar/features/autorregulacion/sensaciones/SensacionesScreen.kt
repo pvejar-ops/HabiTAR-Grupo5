@@ -35,11 +35,10 @@ fun SensacionesScreen(
     // Contenedor principal con scroll vertical para evitar cortes en pantallas pequeñas.
     Column(
         modifier = Modifier
-            .fillMaxSize() // 1. Ocupa toda la pantalla
-            .verticalScroll(rememberScrollState()) // 2. El scroll va primero para manejar el contenido dinámico
-            .padding(all = 24.dp) // 3. El margen de la pantalla
-            .imePadding(), // 4. 💡 EL IME VA AL FINAL. Así empuja el contenedor real desde la base del teclado
-        horizontalAlignment = Alignment.CenterHorizontally
+            .fillMaxSize() // Expande el contenedor a todo el espacio disponible.
+            .verticalScroll(rememberScrollState()) // Activa el desplazamiento si el contenido crece.
+            .padding(24.dp), // Margen de seguridad de 24dp en todos los bordes.
+        horizontalAlignment = Alignment.CenterHorizontally // Centra los componentes hijos horizontalmente.
     ) {
 
         // --- FUNCIÓN: BOTÓN VOLVER ---

@@ -38,11 +38,11 @@ fun LoginScreen(
     // Column: Organiza todos los elementos de forma vertical (uno sobre otro)
     Column(
         modifier = Modifier
-            .fillMaxSize() // 1. Ocupa toda la pantalla
-            .verticalScroll(rememberScrollState()) // 2. El scroll va primero para manejar el contenido dinámico
-            .padding(all = 24.dp) // 3. El margen de la pantalla
-            .imePadding(), // 4. 💡 EL IME VA AL FINAL. Así empuja el contenedor real desde la base del teclado
-        horizontalAlignment = Alignment.CenterHorizontally
+            .fillMaxSize()            // Hace que la columna ocupe toda la pantalla disponible
+            .verticalScroll(rememberScrollState()) // Habilita el desplazamiento si el contenido excede la pantalla
+            .padding(24.dp),          // Agrega un margen interno para que el contenido no toque los bordes
+        horizontalAlignment = Alignment.CenterHorizontally, // Alinea los elementos al centro horizontal
+        verticalArrangement = Arrangement.Top               // Comienza a dibujar desde la parte superior
     ) {
         // --- VARIABLES DE ESTADO (Manejo de Datos) ---
         // 'remember' permite que el valor persista aunque la pantalla se redibuje

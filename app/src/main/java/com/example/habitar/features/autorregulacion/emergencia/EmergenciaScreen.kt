@@ -83,10 +83,10 @@ fun EmergenciaScreen(
 
     Column(
         modifier = Modifier
-            .fillMaxSize() // 1. Ocupa toda la pantalla
-            .verticalScroll(rememberScrollState()) // 2. El scroll va primero para manejar el contenido dinámico
-            .padding(all = 24.dp) // 3. El margen de la pantalla
-            .imePadding(), // 4. 💡 EL IME VA AL FINAL. Así empuja el contenedor real desde la base del teclado
+            .fillMaxSize()
+            .background(Color.White)
+            .verticalScroll(rememberScrollState())
+            .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         // --- BOTÓN VOLVER ---
