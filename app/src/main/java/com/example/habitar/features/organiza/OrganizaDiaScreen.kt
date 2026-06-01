@@ -3,6 +3,8 @@ package com.example.habitar.features.organiza
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
@@ -23,8 +25,11 @@ fun OrganizaDiaScreen(onNavigateBack: () -> Unit) {
     Scaffold { padding ->
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
+                .fillMaxSize() // 1. Ocupa toda la pantalla
+                .verticalScroll(rememberScrollState()) // 2. El scroll va primero para manejar el contenido dinámico
+                .padding(all = 24.dp) // 3. El margen de la pantalla
+                .imePadding(), // 4. 💡 EL IME VA AL FINAL. Así empuja el contenedor real desde la base del teclado
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // --- ESTA ES TU BARRA MANUAL ---
             Row(

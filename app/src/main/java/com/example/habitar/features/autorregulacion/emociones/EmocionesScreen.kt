@@ -17,47 +17,43 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 
-/**
- * Pantalla de Emociones del proyecto HabiTAR.
- * Gestiona la selección de estados anímicos y el envío de datos a la IA.
- */
+/** Pantalla de Emociones del proyecto HabiTAR.
+ Gestiona la selección de estados anímicos y el envío de datos a la IA */
 @Composable
-fun EmocionesScreen(onNavigateToMenu: () -> Unit) {
-
-    // --- PERSISTENCIA DE DATOS LOCALES ---
-    // textoEmocion: Almacena cada caracter que el usuario escribe.
-    var textoEmocion by remember { mutableStateOf("") }
-
-    // etiquetasSeleccionadas: Lista que rastrea las emociones clickeadas.
-    val etiquetasSeleccionadas = remember { mutableStateListOf<String>() }
-
+fun EmocionesScreen(
+    onNavigateToMenu: () -> Unit,
+    viewModel: EmocionesViewModel = viewModel()
+) {
     val etiquetasDisponibles = listOf("Feliz", "Eufórico", "Confundido", "Triste", "Enojado", "Frustrado")
 
+    // CONTENEDOR PRINCIPAL: Ahora maneja el padding de forma limpia
     Column(
         modifier = Modifier
-            .fillMaxSize() // Ocupa todo el ancho y alto disponible de la pantalla.
-            .verticalScroll(rememberScrollState()) // Habilita el scroll si el contenido excede la pantalla.
-            .padding(24.dp), // Margen interno general para que el contenido no toque los bordes físicos.
-        horizontalAlignment = Alignment.CenterHorizontally // Alinea los hijos al centro horizontal.
+            .fillMaxSize() // 1. Ocupa toda la pantalla
+            .verticalScroll(rememberScrollState()) // 2. El scroll va primero para manejar el contenido dinámico
+            .padding(all = 24.dp) // 3. El margen de la pantalla
+            .imePadding(), // 4. 💡 EL IME VA AL FINAL. Así empuja el contenedor real desde la base del teclado
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
         // --- COMPONENTE: BOTÓN VOLVER ---
         IconButton(
             onClick = onNavigateToMenu,
             modifier = Modifier
-                .background(color = Color(0xFFF3EDF7), shape = CircleShape) // Fondo lila claro circular.
-                .size(48.dp) // Define un tamaño fijo de 48dp para el área del botón.
-                .align(Alignment.Start) // Fuerza a este botón específico a alinearse a la izquierda.
+                .background(color = Color(0xFFF3EDF7), shape = CircleShape)
+                .size(48.dp)
+                .align(Alignment.Start)
         ) {
             Icon(
                 imageVector = Icons.Default.ArrowBack,
                 contentDescription = "Volver",
-                tint = Color(0xFFD671F5) // Color rosa distintivo del módulo.
+                tint = Color(0xFFD671F5)
             )
         }
 
-        Spacer(modifier = Modifier.height(8.dp)) // Espacio vacío vertical entre el botón y el título.
+        Spacer(modifier = Modifier.height(16.dp))
 
         // --- COMPONENTE: TÍTULO PRINCIPAL ---
         Text(
@@ -67,12 +63,12 @@ fun EmocionesScreen(onNavigateToMenu: () -> Unit) {
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
             modifier = Modifier
-                .fillMaxWidth() // El fondo rosa ocupa todo el ancho disponible.
-                .background(color = Color(0xFFD671F5), shape = CircleShape) // Fondo rosa con bordes redondeados.
-                .padding(vertical = 12.dp) // Espaciado interno arriba y abajo del texto para darle aire.
+                .fillMaxWidth()
+                .background(color = Color(0xFFD671F5), shape = CircleShape)
+                .padding(vertical = 12.dp)
         )
 
-        // Subtítulo descriptivo con padding vertical para separarlo de los otros bloques.
+        // Subtítulo descriptivo
         Text(
             text = "Chat con IA que te permite autorregularte",
             style = MaterialTheme.typography.bodyMedium,
@@ -81,7 +77,7 @@ fun EmocionesScreen(onNavigateToMenu: () -> Unit) {
             textAlign = TextAlign.Center
         )
 
-        // Instrucción para el usuario con padding inferior.
+        // Instrucción
         Text(
             text = "Selecciona las emociones que te identifiquen en este momento",
             style = MaterialTheme.typography.titleMedium,
@@ -90,29 +86,26 @@ fun EmocionesScreen(onNavigateToMenu: () -> Unit) {
             modifier = Modifier.padding(bottom = 16.dp)
         )
 
-        // --- COMPONENTE: GRID DE EMOCIONES ---
-        Column(modifier = Modifier.fillMaxWidth()) {
-            // Divide la lista de 6 emociones en 2 filas de 3 columnas cada una.
-            val chunks = etiquetasDisponibles.chunked(3)
-            chunks.forEach { fila ->
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 4.dp), // Espacio entre las filas de etiquetas.
-                    horizontalArrangement = Arrangement.spacedBy(8.dp) // Espacio horizontal entre cada etiqueta.
-                ) {
-                    fila.forEach { etiqueta ->
-                        val estaSeleccionada = etiquetasSeleccionadas.contains(etiqueta)
-                        EmotionChip(
-                            text = etiqueta,
-                            isSelected = estaSeleccionada,
-                            modifier = Modifier.weight(1f), // Hace que todas las etiquetas midan lo mismo.
-                            onCheckedChange = {
-                                if (estaSeleccionada) etiquetasSeleccionadas.remove(etiqueta)
-                                else etiquetasSeleccionadas.add(etiqueta)
-                            }
-                        )
-                    }
+        // --- COMPONENTE: GRID DE EMOCIONES (Optimizado sin la columna extra) ---
+        // Quitamos el Modifier.fillMaxWidth() conflictivo de este bloque
+        val chunks = etiquetasDisponibles.chunked(3)
+        chunks.forEach { fila ->
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                fila.forEach { etiqueta ->
+                    val estaSeleccionada = viewModel.emocionesSeleccionadas.contains(etiqueta)
+                    EmotionChip(
+                        text = etiqueta,
+                        isSelected = estaSeleccionada,
+                        modifier = Modifier.weight(1f),
+                        onCheckedChange = {
+                            viewModel.alternarEmocion(etiqueta)
+                        }
+                    )
                 }
             }
         }
@@ -133,8 +126,8 @@ fun EmocionesScreen(onNavigateToMenu: () -> Unit) {
         )
 
         OutlinedTextField(
-            value = textoEmocion,
-            onValueChange = { textoEmocion = it },
+            value = viewModel.comentarioUsuario,
+            onValueChange = { viewModel.comentarioUsuario = it },
             placeholder = { Text("Escribe aquí...", textAlign = TextAlign.Center) },
             modifier = Modifier
                 .fillMaxWidth()
@@ -148,7 +141,7 @@ fun EmocionesScreen(onNavigateToMenu: () -> Unit) {
 
         // --- COMPONENTE: BOTÓN ACCIÓN IA ---
         Button(
-            onClick = { /* Lógica futura de conexión */ },
+            onClick = { viewModel.enviarFormularioEmociones() },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp),
@@ -157,10 +150,14 @@ fun EmocionesScreen(onNavigateToMenu: () -> Unit) {
                 containerColor = Color(0xFFD671F5), // Fondo rosa sólido.
                 contentColor = Color.White        // Texto del botón en blanco.
             ),
-            // Se activa solo si hay texto escrito O al menos una emoción elegida.
-            enabled = textoEmocion.isNotBlank() || etiquetasSeleccionadas.isNotEmpty()
+            // Se bloquea si está cargando o si no ha marcado nada
+            enabled = !viewModel.estaProcesando &&
+                    (viewModel.comentarioUsuario.isNotBlank() || viewModel.emocionesSeleccionadas.isNotEmpty())
         ) {
-            Text("Pedir consejo al Avatar", fontWeight = FontWeight.Bold)
+            Text(
+                text = if (viewModel.estaProcesando) "Procesando..." else "Pedir consejo a HabiTAR",
+                fontWeight = FontWeight.Bold
+            )
         }
 
         // Línea estética decorativa de 4dp de grosor.
@@ -196,7 +193,9 @@ fun EmocionesScreen(onNavigateToMenu: () -> Unit) {
         ) {
             Column(modifier = Modifier.padding(16.dp)) { // Padding interno de la tarjeta para el texto.
                 Text(
-                    text = "Aquí aparecerá el consejo de la IA basado en tus emociones.",
+                    text = viewModel.respuestaIA_Visualizar.ifBlank {
+                        "Aquí aparecerá el consejo de la IA basado en tus emociones."
+                    },
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
@@ -216,8 +215,7 @@ fun EmotionChip(
 ) {
     Surface(
         shape = CircleShape,
-        // LÓGICA INVERTIDA: Fuerte (0xFFD671F5) si no está seleccionado si quieren usamos ese, claro (0xFFE5B6F5) si sí.
-        color = if (isSelected) Color.White else Color(0xFFD671F5),
+        color = if (isSelected) Color(0xFFF3EDF7) else Color(0xFFD671F5), //0xFFF3EDF7
         modifier = modifier.clickable { onCheckedChange() } // Detecta el toque en toda la superficie de la cápsula.
     ) {
         Text(

@@ -7,8 +7,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
@@ -28,46 +30,68 @@ import java.time.format.TextStyle
 import java.util.Locale
 
 @Composable
-fun CalendarioScreen(onNavigateToMenu: () -> Unit,
-                     OnNavigateToTodo: () -> Unit) {
+fun CalendarioScreen(
+    onNavigateToMenu: () -> Unit,
+    onNavigateToTodo: (String) -> Unit
+) {
     // --- LÓGICA DE NAVEGACIÓN DEL MES ---
-    // Guardamos el mes actual que se está visualizando
     var mesActual by remember { mutableStateOf(YearMonth.now()) }
+    val hoyReal = LocalDate.now()
 
     // Colores de tu paleta
     val moradoPrincipal = Color(0xFF6750A4)
     val lilaSeleccion = Color(0xFFD671F5)
     val grisBorde = Color(0xFFE0E0E0)
 
-    val hoyReal = LocalDate.now()
+    // 🌟 Ajuste: Cálculo de días memorizado para optimizar recomposiciones
+    val (diasEnMes, espaciosVacios) = remember(mesActual) {
+        Pair(mesActual.lengthOfMonth(), mesActual.atDay(1).dayOfWeek.value - 1)
+    }
 
     Scaffold(
-        topBar = {
-            IconButton(onClick = onNavigateToMenu, modifier = Modifier.padding(8.dp)) {
-                Icon(Icons.Default.ArrowBack, contentDescription = "Atrás")
-            }
-        }
     ) { padding ->
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .padding(horizontal = 24.dp),
+                .fillMaxSize() // 1. Ocupa toda la pantalla
+                .verticalScroll(rememberScrollState()) // 2. El scroll va primero para manejar el contenido dinámico
+                .padding(all = 24.dp) // 3. El margen de la pantalla
+                .imePadding(), // 4. 💡 EL IME VA AL FINAL. Así empuja el contenedor real desde la base del teclado
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            // --- BOTÓN VOLVER (Idéntico a Organiza) ---
+            IconButton(
+                onClick = onNavigateToMenu,
+                modifier = Modifier
+                    .padding(top = 16.dp)
+                    .background(color = Color(0xFFF3EDF7), shape = CircleShape)
+                    .size(40.dp)
+            ) {
+                Icon(Icons.Default.ArrowBack, contentDescription = "Volver", tint = moradoPrincipal)
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
             // --- TÍTULO ---
             Text(
-                text = "Control Mensual",
+                text = "Calendario",
                 color = Color.White,
                 fontWeight = FontWeight.Bold,
+                fontSize = 20.sp,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(moradoPrincipal, CircleShape)
+                    .background(color = moradoPrincipal, shape = CircleShape)
                     .padding(vertical = 12.dp),
                 textAlign = TextAlign.Center
             )
-
-            Spacer(modifier = Modifier.height(24.dp))
+            Text(
+                text = "Control mensual de tareas",
+                style = MaterialTheme.typography.bodyMedium,
+                color = Color.Gray,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                textAlign = TextAlign.Center
+            )
+            Spacer(modifier = Modifier.height(16.dp))
 
             // --- TARJETA DEL CALENDARIO ---
             Card(
@@ -133,15 +157,15 @@ fun CalendarioScreen(onNavigateToMenu: () -> Unit,
                         // 2. Días del mes actual
                         items(diasEnMes) { diaIdx ->
                             val dia = diaIdx + 1
-                            // Aquí podrías marcar el día de hoy o días con registros
-                            val esHoy = dia == 18 && mesActual == YearMonth.now()
+                            val fechaSeleccionada = mesActual.atDay(dia) // Esto es un objeto LocalDate
+                            val esHoy = fechaSeleccionada == hoyReal
 
                             Box(
                                 modifier = Modifier
                                     .aspectRatio(1f)
                                     .border(0.5.dp, grisBorde)
                                     .background(if (esHoy) lilaSeleccion else Color.Transparent)
-                                    .clickable { /* Aquí abrirías el historial de ese día */ },
+                                    .clickable { onNavigateToTodo(fechaSeleccionada.toString()) },
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text(

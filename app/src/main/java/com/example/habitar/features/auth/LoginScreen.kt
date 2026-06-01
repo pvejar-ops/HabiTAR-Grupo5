@@ -1,6 +1,5 @@
 package com.example.habitar.features.auth
 
-// Importaciones de Compose para manejar la interfaz de usuario, diseño y estados
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -13,28 +12,45 @@ import androidx.compose.ui.unit.dp
 import com.example.habitar.core.ui.componentes.AppButton
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.habitar.features.auth.AuthViewModel
 
 @Composable
 fun LoginScreen(
-    onAuthSuccess: () -> Unit,    // Función Lambda: Se ejecuta cuando el login es exitoso (navega al Menú)
-    onRegisterSuccess: () -> Unit // Función Lambda: Se ejecuta al crear cuenta (navega al flujo de Avatar)
+    onAuthSuccess: () -> Unit,    // Se ejecuta cuando el login es exitoso (navega al Menú)
+    onRegisterSuccess: () -> Unit, // Se ejecuta al crear cuenta (navega al flujo de Avatar)
+    viewModel: AuthViewModel = viewModel() // Recibe el motor de Supabase
 ) {
+    // Escuchar si Supabase da luz verde al Login
+    LaunchedEffect(viewModel.loginExitoso) {
+        if (viewModel.loginExitoso) {
+            onAuthSuccess()
+        }
+    }
+
+    // Escuchar si Supabase da luz verde al Registro
+    LaunchedEffect(viewModel.registroExitoso) {
+        if (viewModel.registroExitoso) {
+            onRegisterSuccess()
+        }
+    }
     // Column: Organiza todos los elementos de forma vertical (uno sobre otro)
     Column(
         modifier = Modifier
-            .fillMaxSize()            // Hace que la columna ocupe toda la pantalla disponible
-            .verticalScroll(rememberScrollState()) // Habilita el desplazamiento si el contenido excede la pantalla
-            .padding(24.dp),          // Agrega un margen interno para que el contenido no toque los bordes
-        horizontalAlignment = Alignment.CenterHorizontally, // Alinea los elementos al centro horizontal
-        verticalArrangement = Arrangement.Top               // Comienza a dibujar desde la parte superior
+            .fillMaxSize() // 1. Ocupa toda la pantalla
+            .verticalScroll(rememberScrollState()) // 2. El scroll va primero para manejar el contenido dinámico
+            .padding(all = 24.dp) // 3. El margen de la pantalla
+            .imePadding(), // 4. 💡 EL IME VA AL FINAL. Así empuja el contenedor real desde la base del teclado
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         // --- VARIABLES DE ESTADO (Manejo de Datos) ---
         // 'remember' permite que el valor persista aunque la pantalla se redibuje
         // 'mutableStateOf' hace que la interfaz se actualice automáticamente al escribir
-        var email by remember { mutableStateOf("") }
-        var contraseña by remember { mutableStateOf("") }
-        var nombre by remember { mutableStateOf("") }
-        var edad by remember { mutableStateOf("") }
+        //var email by remember { mutableStateOf("") }
+        //var contraseña by remember { mutableStateOf("") }
+        //var nombre by remember { mutableStateOf("") }
+        //var edad by remember { mutableStateOf("") }
 
         // Spacer: Crea un espacio vacío para separar elementos (en este caso, del borde superior)
         Spacer(modifier = Modifier.height(40.dp))
@@ -50,8 +66,8 @@ fun LoginScreen(
 
         // OutlinedTextField: Campo de texto con borde para la entrada del correo
         OutlinedTextField(
-            value = email,
-            onValueChange = { email = it }, // Actualiza el estado 'email' con cada letra escrita
+            value = viewModel.emailLogin,
+            onValueChange = { viewModel.emailLogin = it }, // Actualiza el estado 'email' con cada letra escrita
             label = { Text("Email") },
             modifier = Modifier.fillMaxWidth(), // El campo ocupa todo el ancho disponible
             shape = RoundedCornerShape(12.dp),  // Bordes redondeados según el diseño de la app
@@ -62,8 +78,8 @@ fun LoginScreen(
 
         // Campo de texto para la contraseña
         OutlinedTextField(
-            value = contraseña,
-            onValueChange = { contraseña = it },
+            value = viewModel.passwordLogin,
+            onValueChange = { viewModel.passwordLogin = it },
             label = { Text("Contraseña") },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(12.dp),
@@ -72,10 +88,11 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // AppButton: Componente personalizado para el botón de inicio de sesión
+        // AppButton: Botón de inicio de sesión
         AppButton(
-            text = "Iniciar Sesión",
-            onClick = onAuthSuccess, // Llama a la función de navegación definida en el NavHost
+            text = if (viewModel.estaCargando) "Cargando..." else "Iniciar Sesión",
+            onClick = { viewModel.ejecutarLogin() }, // <-- CAMBIADO
+            enabled = !viewModel.estaCargando,       // <-- NUEVO
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xFF5E5CE6), // Color principal personalizado (Morado/Azul)
                 contentColor = Color.White         // Color del texto blanco para legibilidad
@@ -122,9 +139,9 @@ fun LoginScreen(
         // --- CAMPOS DE REGISTRO ---
         // Campo para nombre del nuevo usuario
         OutlinedTextField(
-            value = nombre,
-            onValueChange = { nombre = it },
-            label = { Text("Nombre y Apellido") },
+            value = viewModel.nombreRegistro,
+            onValueChange = { viewModel.nombreRegistro = it },
+            label = { Text("Nombre") },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(12.dp),
             singleLine = true
@@ -134,8 +151,8 @@ fun LoginScreen(
 
         // Campo para la edad (importante para el perfil de HabiTAR)
         OutlinedTextField(
-            value = edad,
-            onValueChange = { edad = it },
+            value = viewModel.edadRegistro,
+            onValueChange = { viewModel.edadRegistro = it },
             label = { Text("Edad") },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(12.dp),
@@ -144,8 +161,8 @@ fun LoginScreen(
 
         // Se repiten campos de email y contraseña para el proceso de creación de cuenta
         OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
+            value = viewModel.emailRegistro,
+            onValueChange = { viewModel.emailRegistro = it },
             label = { Text("Email") },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(12.dp),
@@ -155,8 +172,8 @@ fun LoginScreen(
         Spacer(modifier = Modifier.height(8.dp))
 
         OutlinedTextField(
-            value = contraseña,
-            onValueChange = { contraseña = it },
+            value = viewModel.passwordRegistro,
+            onValueChange = { viewModel.passwordRegistro = it },
             label = { Text("Contraseña") },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(12.dp),
@@ -167,13 +184,36 @@ fun LoginScreen(
 
         // Botón final que dispara la lógica de registro y navegación al Avatar
         AppButton(
-            text = "Crear Cuenta",
-            onClick = onRegisterSuccess, // Llama a la función de navegación definida en el NavHost
+            text = if (viewModel.estaCargando) "Registrando..." else "Crear Cuenta",
+            onClick = { viewModel.ejecutarRegistro() }, // <-- CAMBIADO
+            enabled = !viewModel.estaCargando,          // <-- NUEVO
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xFF5E5CE6), // Color principal personalizado (Morado/Azul)
                 contentColor = Color.White         // Color del texto blanco para legibilidad
             ),
             modifier = Modifier.fillMaxWidth()
         )
+
+        if (viewModel.registroExitoso) {
+            Spacer(modifier = Modifier.height(12.dp))
+            Text(
+                text = "¡Cuenta creada con éxito! Bienvenido a HabiTAR.",
+                color = Color(0xFF4CAF50), // Verde amigable de éxito
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
+            )
+        }
+
+        if (viewModel.mensajeError != null) {
+            Spacer(modifier = Modifier.height(12.dp))
+            Text(
+                text = viewModel.mensajeError ?: "Error desconocido",
+                color = Color.Red, // Rojo de advertencia
+                fontWeight = FontWeight.Medium,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
+            )
+        }
     }
 }
