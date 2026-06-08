@@ -4,8 +4,12 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -18,16 +22,56 @@ import com.example.habitar.core.navegacion.AppNavGraph
 import com.example.habitar.core.navegacion.Screen
 import com.example.habitar.core.ui.theme.HabiTARTheme
 import androidx.compose.ui.unit.dp
+import androidx.work.PeriodicWorkRequestBuilder
+import java.util.Calendar
+import androidx.work.*
+import com.example.habitar.core.notificaciones.NotificacionWorker
+import java.util.concurrent.TimeUnit
+import androidx.activity.result.contract.ActivityResultContracts
+import android.Manifest
+import android.os.Build
 
 class MainActivity : ComponentActivity() {
+
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            programarNotificacionDiaria()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
-            HabiTARTheme {
+            HabiTARTheme(darkTheme = false) {
                 MainScreen()
             }
         }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        } else {
+            // Android < 13 no necesita permiso, programa directo
+            programarNotificacionDiaria()
+        }
+    }
+    private fun programarNotificacionDiaria() {
+        val ahora = Calendar.getInstance()
+        val objetivo = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, 9)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            if (before(ahora)) add(Calendar.DAY_OF_MONTH, 1)
+        }
+        val delay = objetivo.timeInMillis - ahora.timeInMillis
+        val request = PeriodicWorkRequestBuilder<NotificacionWorker>(1, TimeUnit.HOURS) // 👈 DAYS por HOURS
+            .setInitialDelay(delay, TimeUnit.MILLISECONDS)
+            .build()
+        WorkManager.getInstance(applicationContext).enqueueUniquePeriodicWork(
+            "notificacion_diaria",
+            ExistingPeriodicWorkPolicy.KEEP,
+            request
+        )
     }
 }
 
@@ -39,7 +83,9 @@ fun MainScreen() {
     val currentRoute = navBackStackEntry?.destination?.route
 
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize() .navigationBarsPadding(),
+        contentWindowInsets = WindowInsets(0),
+        containerColor = MaterialTheme.colorScheme.background,
         bottomBar = {
             // Definimos todas las pantallas donde la barra DEBE seguir visible
             val pantallasPrincipales = listOf(
@@ -56,7 +102,8 @@ fun MainScreen() {
             if (currentRoute in pantallasPrincipales) {
                 NavigationBar(
                     containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
-                    tonalElevation = 8.dp
+                    tonalElevation = 8.dp,
+                    windowInsets = WindowInsets(0) // 👈 agrega esto
                 ) {
                     val items = listOf(
                         BottomBarItem.Menu,

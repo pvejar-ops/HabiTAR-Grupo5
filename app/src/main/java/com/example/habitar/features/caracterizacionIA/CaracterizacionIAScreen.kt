@@ -29,6 +29,13 @@ fun CaracterizacionIAScreen(
             onTodoListoSuccess() // <-- Ejecuta la navegación al menú de forma segura
         }
     }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFEEEEF8)) // 👈 primero el fondo
+            .imePadding()                  // 👈 luego el teclado
+    ){
     // Column con scroll: Vital para que si agregas muchas preguntas, el usuario pueda bajar.
     Column(
         modifier = Modifier
@@ -174,4 +181,5 @@ fun CaracterizacionIAScreen(
             )
         }
     }
+}
 }
