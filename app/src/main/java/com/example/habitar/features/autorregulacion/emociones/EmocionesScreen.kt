@@ -1,5 +1,6 @@
 package com.example.habitar.features.autorregulacion.emociones
 
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -42,12 +43,25 @@ fun EmocionesScreen(
     val etiquetasDisponibles =
         listOf("Feliz", "Eufórico", "Confundido", "Triste", "Enojado", "Frustrado")
 
+    val activity = LocalActivity.current as androidx.activity.ComponentActivity
+
+    DisposableEffect(Unit) {
+        val originalMode = activity.window.attributes.softInputMode
+        activity.window.setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+
+        onDispose {
+            activity.window.setSoftInputMode(originalMode) // 👈 restaura al salir
+        }
+    }
+
     Column(
         modifier = Modifier
-            .fillMaxSize() // Ocupa todo el ancho y alto disponible de la pantalla.
-            .verticalScroll(rememberScrollState()) // Habilita el scroll si el contenido excede la pantalla.
-            .padding(24.dp), // Margen interno general para que el contenido no toque los bordes físicos.
-        horizontalAlignment = Alignment.CenterHorizontally // Alinea los hijos al centro horizontal.
+            .fillMaxSize()
+            .statusBarsPadding() //
+            .verticalScroll(rememberScrollState())
+            .padding(24.dp)
+            .imePadding(),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
         // --- COMPONENTE: BOTÓN VOLVER ---

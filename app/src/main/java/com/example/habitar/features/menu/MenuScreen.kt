@@ -29,6 +29,7 @@ fun MenuScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .statusBarsPadding()
             .verticalScroll(rememberScrollState()) // Habilita el desplazamiento si el contenido es más alto que la pantalla.
             .padding(top = 40.dp, start = 24.dp, end = 24.dp, bottom = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally // Centra todos los componentes hijos horizontalmente.
