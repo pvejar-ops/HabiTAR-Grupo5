@@ -216,13 +216,27 @@ fun EmergenciaScreen(
             colors = CardDefaults.cardColors(containerColor = fondoTarjeta)
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
-                Text(
-                    text = viewModel.respuestaIA.ifBlank {
-                        "Aquí aparecerá el consejo de la IA basado en tus emociones."
-                    },
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = if (viewModel.respuestaIA.isNotBlank()) Color.Black else Color.Gray
-                )
+                if (viewModel.respuestaIA.isBlank()) {
+                    Text(
+                        text = "Aquí aparecerá el consejo de la IA basado en tus emociones.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.Gray
+                    )
+                } else {
+                    AndroidView(
+                        factory = { context ->
+                            android.widget.TextView(context).also { tv ->
+                                io.noties.markwon.Markwon.create(context)
+                                    .setMarkdown(tv, viewModel.respuestaIA)
+                            }
+                        },
+                        update = { tv ->
+                            io.noties.markwon.Markwon.create(tv.context)
+                                .setMarkdown(tv, viewModel.respuestaIA)
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
             }
         }
 

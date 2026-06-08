@@ -18,17 +18,29 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.habitar.core.SupabaseConfig
+import com.example.habitar.core.SupabaseRepository
+import com.example.habitar.features.chatIA.IAViewModel
+import com.example.habitar.features.chatIA.IAViewModelFactory
+import android.widget.TextView
+import androidx.compose.ui.viewinterop.AndroidView
+import io.noties.markwon.Markwon
 
 /** Pantalla de Emociones del proyecto HabiTAR.
  Gestiona la selección de estados anímicos y el envío de datos a la IA */
 @Composable
 fun EmocionesScreen(
     onNavigateToMenu: () -> Unit,
-    viewModel: EmocionesViewModel = viewModel()
+    viewModel: EmocionesViewModel = viewModel(),
+    iaViewModel: IAViewModel = viewModel(
+        factory = IAViewModelFactory(SupabaseRepository(SupabaseConfig.client))
+    )
 ) {
     //var textoEmocion by remember { mutableStateOf("") }
     //val etiquetasSeleccionadas = remember { mutableStateListOf<String>() }
-    val etiquetasDisponibles = listOf("Feliz", "Eufórico", "Confundido", "Triste", "Enojado", "Frustrado")
+    val scope = rememberCoroutineScope() // Necesario para llamar funciones suspendidas
+    val etiquetasDisponibles =
+        listOf("Feliz", "Eufórico", "Confundido", "Triste", "Enojado", "Frustrado")
 
     Column(
         modifier = Modifier
@@ -42,7 +54,10 @@ fun EmocionesScreen(
         IconButton(
             onClick = onNavigateToMenu,
             modifier = Modifier
-                .background(color = Color(0xFFF3EDF7), shape = CircleShape) // Fondo lila claro circular.
+                .background(
+                    color = Color(0xFFF3EDF7),
+                    shape = CircleShape
+                ) // Fondo lila claro circular.
                 .size(48.dp) // Define un tamaño fijo de 48dp para el área del botón.
                 .align(Alignment.Start) // Fuerza a este botón específico a alinearse a la izquierda.
         ) {
@@ -64,7 +79,10 @@ fun EmocionesScreen(
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .fillMaxWidth() // El fondo rosa ocupa todo el ancho disponible.
-                .background(color = Color(0xFFD671F5), shape = CircleShape) // Fondo rosa con bordes redondeados.
+                .background(
+                    color = Color(0xFFD671F5),
+                    shape = CircleShape
+                ) // Fondo rosa con bordes redondeados.
                 .padding(vertical = 12.dp) // Espaciado interno arriba y abajo del texto para darle aire.
         )
 
@@ -193,13 +211,26 @@ fun EmocionesScreen(
             colors = CardDefaults.cardColors(containerColor = Color(0xFFF8F8F8)), // Fondo gris muy claro.
             elevation = CardDefaults.cardElevation(2.dp) // Sombra suave para dar profundidad.
         ) {
-            Column(modifier = Modifier.padding(16.dp)) { // Padding interno de la tarjeta para el texto.
-                Text(
-                    text = viewModel.respuestaIA_Visualizar.ifBlank {
-                        "Aquí aparecerá el consejo de la IA basado en tus emociones."
-                    },
-                    style = MaterialTheme.typography.bodyMedium
-                )
+            Column(modifier = Modifier.padding(16.dp)) {
+                if (viewModel.respuestaIA_Visualizar.isBlank()) {
+                    Text(
+                        text = "Aquí aparecerá el consejo de la IA basado en tus emociones.",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                } else {
+                    val markwon = Markwon.create(androidx.compose.ui.platform.LocalContext.current)
+                    AndroidView(
+                        factory = { context ->
+                            TextView(context).also { tv ->
+                                markwon.setMarkdown(tv, viewModel.respuestaIA_Visualizar)
+                            }
+                        },
+                        update = { tv ->
+                            markwon.setMarkdown(tv, viewModel.respuestaIA_Visualizar)
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
             }
         }
     }

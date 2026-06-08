@@ -1,7 +1,14 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     id("org.jetbrains.kotlin.plugin.serialization")
+    //id("com.google.gms.google-services")
+}
+
+val localProps = Properties().apply {
+    rootProject.file("local.properties").takeIf { it.exists() }?.inputStream()?.use { load(it) }
 }
 
 android {
@@ -20,6 +27,10 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField(
+            "String",
+            "GEMINI_API_KEY",
+            "\"${localProps.getProperty("GEMINI_API_KEY") ?: ""}\"")
     }
 
     buildTypes {
@@ -37,6 +48,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true    // para generar la clase BuildConfig
     }
 }
 
@@ -68,4 +80,6 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.6.0")
     implementation("androidx.media3:media3-exoplayer:1.3.1")
     implementation("androidx.media3:media3-ui:1.3.1")
+    implementation("com.google.ai.client.generativeai:generativeai:0.9.0") // SDK oficial de Google AI para Android
+    implementation("io.noties.markwon:core:4.6.2") //Para renderizar respuesta ia
 }

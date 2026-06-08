@@ -1,6 +1,5 @@
 package com.example.habitar.core
 
-import com.example.habitar.core.navegacion.Screen
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.gotrue.Auth
