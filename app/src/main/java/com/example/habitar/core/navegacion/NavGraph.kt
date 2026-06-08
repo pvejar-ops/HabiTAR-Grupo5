@@ -68,8 +68,10 @@ fun AppNavGraph(
         composable(Screen.Auth.route) {
             LoginScreen(
                 onAuthSuccess = {
-                    // Si el usuario ya tiene cuenta, va al Menú
-                    navController.navigate(Screen.Menu.route)
+                    // Si el usuario ya tiene cuenta, va al Menú y borra el historial de login
+                    navController.navigate(Screen.Menu.route) {
+                        popUpTo(Screen.Inicio.route) { inclusive = true }
+                    }
                 },
                 onRegisterSuccess = {
                     // Si el usuario se está registrando, va al Avatar
@@ -83,8 +85,10 @@ fun AppNavGraph(
                 onNavigateToIA = {
                     navController.navigate(Screen.CaracterizacionDeIA.route)
                 },
-                onAuthSuccess = { // <--- Agrega este parámetro que faltaba
-                    navController.navigate(Screen.Menu.route)
+                onAuthSuccess = {
+                    navController.navigate(Screen.Menu.route) {
+                        popUpTo(Screen.Inicio.route) { inclusive = true }
+                    }
                 }
             )
         }
@@ -93,7 +97,9 @@ fun AppNavGraph(
         composable(Screen.CaracterizacionDeIA.route) {
             CaracterizacionIAScreen(
                 onTodoListoSuccess = {
-                    navController.navigate(Screen.Menu.route)
+                    navController.navigate(Screen.Menu.route) {
+                        popUpTo(Screen.Inicio.route) { inclusive = true }
+                    }
                 }
             )
         }
@@ -111,7 +117,7 @@ fun AppNavGraph(
         // 3. Calendario y Organiza tu Día (Navegación jerárquica)
         composable(Screen.Calendario.route) {
             CalendarioScreen(
-                onNavigateToMenu = { navController.navigate(Screen.Menu.route) },
+                onNavigateToMenu = { navController.popBackStack() },
                 onNavigateToTodo = { fechaSeleccionada ->
                     navController.navigate("organiza_dia_screen?fecha=$fechaSeleccionada")
                 }
@@ -138,28 +144,30 @@ fun AppNavGraph(
                     .toString()
 
             OrganizaDiaScreen(
-                fechaFiltro = fechaFinal, // 🌟 Pasamos la fecha calculada a tu pantalla
+                fechaFiltro = fechaFinal,
                 onNavigateToMenu = {
-                    // 🌟 NAVEGACIÓN SEGURA AL MENÚ
-                    navController.navigate(Screen.Menu.route) {
-                        // Esto elimina todo el historial hasta el Menú
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            inclusive = true
+                    // Si hay pantallas en el stack (ej. vino del Calendario), retrocede.
+                    // Si no, asegura ir al Menú limpiando el historial.
+                    if (!navController.popBackStack()) {
+                        navController.navigate(Screen.Menu.route) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                inclusive = true
+                            }
+                            launchSingleTop = true
                         }
-                        launchSingleTop = true
                     }
                 }
             )
         }
 
         // 4. Módulos de Autorregulación y Perfil
-        composable(Screen.Emociones.route) { EmocionesScreen(onNavigateToMenu = {navController.navigate(Screen.Menu.route)})}
-        composable(Screen.Meditacion.route) { MeditacionScreen(onNavigateToMenu = {navController.navigate(Screen.Menu.route)})}
-        composable(Screen.Emergencia.route) { EmergenciaScreen(onNavigateToMenu = {navController.navigate(Screen.Menu.route)}) }
-        composable(Screen.Sensaciones.route) { SensacionesScreen(onNavigateToMenu = {navController.navigate(Screen.Menu.route)})}
+        composable(Screen.Emociones.route) { EmocionesScreen(onNavigateToMenu = { navController.popBackStack() }) }
+        composable(Screen.Meditacion.route) { MeditacionScreen(onNavigateToMenu = { navController.popBackStack() }) }
+        composable(Screen.Emergencia.route) { EmergenciaScreen(onNavigateToMenu = { navController.popBackStack() }) }
+        composable(Screen.Sensaciones.route) { SensacionesScreen(onNavigateToMenu = { navController.popBackStack() }) }
         composable(Screen.Perfil.route) { PerfilScreen(navController = navController) }
-        }
     }
+}
 
 @Composable
 fun CaracterizacionIAScreen(
