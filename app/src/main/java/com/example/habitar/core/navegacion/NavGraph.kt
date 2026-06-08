@@ -117,7 +117,15 @@ fun AppNavGraph(
         // 3. Calendario y Organiza tu Día (Navegación jerárquica)
         composable(Screen.Calendario.route) {
             CalendarioScreen(
-                onNavigateToMenu = { navController.popBackStack() },
+                onNavigateToMenu = {
+                    val popped = navController.popBackStack()
+                    if (!popped || navController.currentDestination?.route == Screen.Inicio.route) {
+                        navController.navigate(Screen.Menu.route) {
+                            popUpTo(navController.graph.findStartDestination().id) { inclusive = true }
+                            launchSingleTop = true
+                        }
+                    }
+                },
                 onNavigateToTodo = { fechaSeleccionada ->
                     navController.navigate("organiza_dia_screen?fecha=$fechaSeleccionada")
                 }
