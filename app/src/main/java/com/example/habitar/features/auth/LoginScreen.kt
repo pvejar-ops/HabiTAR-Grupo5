@@ -1,6 +1,9 @@
 package com.example.habitar.features.auth
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -8,6 +11,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.unit.dp
 import com.example.habitar.core.ui.componentes.AppButton
 import androidx.compose.ui.graphics.Color
@@ -15,6 +19,27 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.habitar.features.auth.AuthViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+
+@Composable
+fun AutoScrollTextField(content: @Composable (Modifier) -> Unit) {
+    val bringIntoViewRequester = remember { BringIntoViewRequester() }
+    val coroutineScope = rememberCoroutineScope()
+
+    content(
+        Modifier.bringIntoViewRequester(bringIntoViewRequester)
+            .onFocusEvent { focusState ->
+                if (focusState.isFocused) {
+                    coroutineScope.launch {
+                        delay(300) // Espera a que el teclado suba
+                        bringIntoViewRequester.bringIntoView()
+                    }
+                }
+            }
+    )
+}
+
 
 @Composable
 fun LoginScreen(
@@ -35,15 +60,22 @@ fun LoginScreen(
             onRegisterSuccess()
         }
     }
-    // Column: Organiza todos los elementos de forma vertical (uno sobre otro)
-    Column(
+    Box(
         modifier = Modifier
-            .fillMaxSize()            // Hace que la columna ocupe toda la pantalla disponible
-            .verticalScroll(rememberScrollState()) // Habilita el desplazamiento si el contenido excede la pantalla
-            .padding(24.dp),          // Agrega un margen interno para que el contenido no toque los bordes
-        horizontalAlignment = Alignment.CenterHorizontally, // Alinea los elementos al centro horizontal
-        verticalArrangement = Arrangement.Top               // Comienza a dibujar desde la parte superior
+            .fillMaxSize()
+            .background(Color(0xFFEEEEF8)) // 👈 primero el fondo
+            .imePadding()                  // 👈 luego el teclado
     ) {
+    // Column: Organiza todos los elementos de forma vertical (uno sobre otro)
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color(0xFFF3EDF7))
+                .verticalScroll(rememberScrollState())
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Top
+        ) {
         // --- VARIABLES DE ESTADO (Manejo de Datos) ---
         // 'remember' permite que el valor persista aunque la pantalla se redibuje
         // 'mutableStateOf' hace que la interfaz se actualice automáticamente al escribir
@@ -65,27 +97,30 @@ fun LoginScreen(
         Spacer(modifier = Modifier.height(32.dp))
 
         // OutlinedTextField: Campo de texto con borde para la entrada del correo
-        OutlinedTextField(
-            value = viewModel.emailLogin,
-            onValueChange = { viewModel.emailLogin = it }, // Actualiza el estado 'email' con cada letra escrita
-            label = { Text("Email") },
-            modifier = Modifier.fillMaxWidth(), // El campo ocupa todo el ancho disponible
-            shape = RoundedCornerShape(12.dp),  // Bordes redondeados según el diseño de la app
-            singleLine = true                   // Evita que el usuario salte de línea dentro del campo
-        )
+        AutoScrollTextField { autoScrollModifier ->
+            OutlinedTextField(
+                value = viewModel.emailLogin,
+                onValueChange = { viewModel.emailLogin = it },
+                label = { Text("Email") },
+                modifier = Modifier.fillMaxWidth().then(autoScrollModifier),
+                shape = RoundedCornerShape(12.dp),
+                singleLine = true
+            )
+        }
 
         Spacer(modifier = Modifier.height(8.dp))
 
         // Campo de texto para la contraseña
+        AutoScrollTextField { autoScrollModifier ->
         OutlinedTextField(
             value = viewModel.passwordLogin,
             onValueChange = { viewModel.passwordLogin = it },
             label = { Text("Contraseña") },
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().then(autoScrollModifier),
             shape = RoundedCornerShape(12.dp),
             singleLine = true
         )
-
+        }
         Spacer(modifier = Modifier.height(32.dp))
 
         // AppButton: Botón de inicio de sesión
@@ -138,47 +173,55 @@ fun LoginScreen(
 
         // --- CAMPOS DE REGISTRO ---
         // Campo para nombre del nuevo usuario
+        AutoScrollTextField { autoScrollModifier ->
         OutlinedTextField(
             value = viewModel.nombreRegistro,
             onValueChange = { viewModel.nombreRegistro = it },
             label = { Text("Nombre") },
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().then(autoScrollModifier),
             shape = RoundedCornerShape(12.dp),
             singleLine = true
         )
+        }
 
         Spacer(modifier = Modifier.height(8.dp))
 
         // Campo para la edad (importante para el perfil de HabiTAR)
+        AutoScrollTextField { autoScrollModifier ->
         OutlinedTextField(
             value = viewModel.edadRegistro,
             onValueChange = { viewModel.edadRegistro = it },
             label = { Text("Edad") },
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().then(autoScrollModifier),
             shape = RoundedCornerShape(12.dp),
             singleLine = true
         )
+        }
 
         // Se repiten campos de email y contraseña para el proceso de creación de cuenta
+        AutoScrollTextField { autoScrollModifier ->
         OutlinedTextField(
             value = viewModel.emailRegistro,
             onValueChange = { viewModel.emailRegistro = it },
             label = { Text("Email") },
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().then(autoScrollModifier),
             shape = RoundedCornerShape(12.dp),
             singleLine = true
         )
+        }
 
         Spacer(modifier = Modifier.height(8.dp))
 
+        AutoScrollTextField { autoScrollModifier ->
         OutlinedTextField(
             value = viewModel.passwordRegistro,
             onValueChange = { viewModel.passwordRegistro = it },
             label = { Text("Contraseña") },
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().then(autoScrollModifier),
             shape = RoundedCornerShape(12.dp),
             singleLine = true
         )
+        }
 
         Spacer(modifier = Modifier.height(20.dp))
 
@@ -216,4 +259,5 @@ fun LoginScreen(
             )
         }
     }
+  }
 }

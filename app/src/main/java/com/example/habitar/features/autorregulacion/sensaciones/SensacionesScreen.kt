@@ -36,8 +36,10 @@ fun SensacionesScreen(
     Column(
         modifier = Modifier
             .fillMaxSize() // Expande el contenedor a todo el espacio disponible.
+            .statusBarsPadding()
             .verticalScroll(rememberScrollState()) // Activa el desplazamiento si el contenido crece.
-            .padding(24.dp), // Margen de seguridad de 24dp en todos los bordes.
+            .padding(24.dp)
+            .imePadding(), // Margen de seguridad de 24dp en todos los bordes.
         horizontalAlignment = Alignment.CenterHorizontally // Centra los componentes hijos horizontalmente.
     ) {
 

@@ -52,13 +52,22 @@ class EmergenciaViewModel(
     }
 
     fun seleccionarAudio(recurso: RecursoModulo) {
-        val esElMismo = recursoAuditivoSeleccionado?.id_recurso == recurso.id_recurso
-        recursoAuditivoSeleccionado = if (esElMismo) null else recurso
+        // Si ya estaba seleccionado, lo deseleccionamos; si no, lo asignamos
+        if (recursoAuditivoSeleccionado?.id_recurso == recurso.id_recurso) {
+            recursoAuditivoSeleccionado = null
+        } else {
+            recursoAuditivoSeleccionado = recurso
+            recursoVisualSeleccionado = null // 🌟 CRUCIAL: Apaga el video si se selecciona un audio
+        }
     }
-
     fun seleccionarVisual(recurso: RecursoModulo) {
-        val esElMismo = recursoVisualSeleccionado?.id_recurso == recurso.id_recurso
-        recursoVisualSeleccionado = if (esElMismo) null else recurso
+        // Si ya estaba seleccionado, lo deseleccionamos; si no, lo asignamos
+        if (recursoVisualSeleccionado?.id_recurso == recurso.id_recurso) {
+            recursoVisualSeleccionado = null
+        } else {
+            recursoVisualSeleccionado = recurso
+            recursoAuditivoSeleccionado = null // 🌟 CRUCIAL: Apaga el audio si se selecciona un video
+        }
     }
 
     fun pedirConsejoYRegistrar() {

@@ -84,9 +84,10 @@ fun EmergenciaScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .statusBarsPadding() //
             .verticalScroll(rememberScrollState())
-            .padding(24.dp),
+            .padding(24.dp)
+            .imePadding(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         // --- BOTÓN VOLVER ---
