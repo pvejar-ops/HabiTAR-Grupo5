@@ -18,6 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.ui.viewinterop.AndroidView
 
 /** Pantalla de Sensaciones Físicas para el proyecto HabiTAR.
  * Permite al usuario identificar síntomas corporales para recibir pautas de autorregulación.*/
@@ -47,7 +48,10 @@ fun SensacionesScreen(
         IconButton(
             onClick = onNavigateToMenu,
             modifier = Modifier
-                .background(color = Color(0xFFF3EDF7), shape = CircleShape) // Fondo circular lila suave.
+                .background(
+                    color = Color(0xFFF3EDF7),
+                    shape = CircleShape
+                ) // Fondo circular lila suave.
                 .size(48.dp) // Tamaño fijo del área de click.
                 .align(Alignment.Start) // Posiciona el botón al inicio (izquierda) de la columna.
         ) {
@@ -69,7 +73,10 @@ fun SensacionesScreen(
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .fillMaxWidth() // Asegura que el fondo lila cruce toda la pantalla.
-                .background(color = Color(0xFF9291F3), shape = CircleShape) // Cápsula de color sólido.
+                .background(
+                    color = Color(0xFF9291F3),
+                    shape = CircleShape
+                ) // Cápsula de color sólido.
                 .padding(vertical = 12.dp) // Espaciado interno para dar altura a la barra de título.
         )
 
@@ -206,16 +213,30 @@ fun SensacionesScreen(
                 .fillMaxWidth()
                 .padding(vertical = 12.dp),
             shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFFF8F8F8)), // Fondo gris suave.
-            elevation = CardDefaults.cardElevation(2.dp) // Elevación mínima para efecto de sombra.
+            colors = CardDefaults.cardColors(containerColor = Color(0xFFF8F8F8)),
+            elevation = CardDefaults.cardElevation(2.dp)
         ) {
-            Column(modifier = Modifier.padding(16.dp)) { // Margen interno de la tarjeta para el texto de respuesta.
-                Text(
-                    text = viewModel.respuestaIA_Visualizar.ifBlank {
-                        "Aquí aparecerá el consejo de la IA basado en tus sensaciones."
-                    },
-                    style = MaterialTheme.typography.bodyMedium
-                )
+            Column(modifier = Modifier.padding(16.dp)) {
+                if (viewModel.respuestaIA_Visualizar.isBlank()) {
+                    Text(
+                        text = "Aquí aparecerá el consejo de la IA basado en tus sensaciones.",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                } else {
+                    AndroidView(
+                        factory = { context ->
+                            android.widget.TextView(context).also { tv ->
+                                io.noties.markwon.Markwon.create(context)
+                                    .setMarkdown(tv, viewModel.respuestaIA_Visualizar)
+                            }
+                        },
+                        update = { tv ->
+                            io.noties.markwon.Markwon.create(tv.context)
+                                .setMarkdown(tv, viewModel.respuestaIA_Visualizar)
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
             }
         }
     }
