@@ -82,7 +82,8 @@ fun LoginScreen(
         //var email by remember { mutableStateOf("") }
         //var contraseña by remember { mutableStateOf("") }
         //var nombre by remember { mutableStateOf("") }
-        //var edad by remember { mutableStateOf("") }
+        //var edad by remember { mutableStateOf("") }// var telefonoRegistro by mutableStateOf("")
+
 
         // Spacer: Crea un espacio vacío para separar elementos (en este caso, del borde superior)
         Spacer(modifier = Modifier.height(40.dp))
@@ -172,56 +173,73 @@ fun LoginScreen(
         Spacer(modifier = Modifier.height(10.dp))
 
         // --- CAMPOS DE REGISTRO ---
-        // Campo para nombre del nuevo usuario
-        AutoScrollTextField { autoScrollModifier ->
-        OutlinedTextField(
-            value = viewModel.nombreRegistro,
-            onValueChange = { viewModel.nombreRegistro = it },
-            label = { Text("Nombre") },
-            modifier = Modifier.fillMaxWidth().then(autoScrollModifier),
-            shape = RoundedCornerShape(12.dp),
-            singleLine = true
-        )
-        }
+            AutoScrollTextField { autoScrollModifier ->
+                OutlinedTextField(
+                    value = viewModel.nombreRegistro,
+                    onValueChange = { viewModel.nombreRegistro = it },
+                    label = { Text("Nombre") },
+                    modifier = Modifier.fillMaxWidth().then(autoScrollModifier),
+                    shape = RoundedCornerShape(12.dp),
+                    singleLine = true
+                )
+            }
 
-        Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
-        // Campo para la edad (importante para el perfil de HabiTAR)
-        AutoScrollTextField { autoScrollModifier ->
-        OutlinedTextField(
-            value = viewModel.edadRegistro,
-            onValueChange = { viewModel.edadRegistro = it },
-            label = { Text("Edad") },
-            modifier = Modifier.fillMaxWidth().then(autoScrollModifier),
-            shape = RoundedCornerShape(12.dp),
-            singleLine = true
-        )
-        }
+// Edad y Teléfono lado a lado
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                AutoScrollTextField { autoScrollModifier ->
+                    OutlinedTextField(
+                        value = viewModel.edadRegistro,
+                        onValueChange = { viewModel.edadRegistro = it },
+                        label = { Text("Edad") },
+                        modifier = Modifier.weight(0.35f).then(autoScrollModifier),
+                        shape = RoundedCornerShape(12.dp),
+                        singleLine = true
+                    )
+                }
+                AutoScrollTextField { autoScrollModifier ->
+                    OutlinedTextField(
+                        value = viewModel.telefonoRegistro,
+                        onValueChange = { viewModel.telefonoRegistro = it },
+                        label = { Text("Teléfono") },
+                        modifier = Modifier.weight(0.65f).then(autoScrollModifier),
+                        shape = RoundedCornerShape(12.dp),
+                        singleLine = true
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.height(8.dp))
 
-        // Se repiten campos de email y contraseña para el proceso de creación de cuenta
-        AutoScrollTextField { autoScrollModifier ->
-        OutlinedTextField(
-            value = viewModel.emailRegistro,
-            onValueChange = { viewModel.emailRegistro = it },
-            label = { Text("Email") },
-            modifier = Modifier.fillMaxWidth().then(autoScrollModifier),
-            shape = RoundedCornerShape(12.dp),
-            singleLine = true
-        )
-        }
+// Email registro
+            AutoScrollTextField { autoScrollModifier ->
+                OutlinedTextField(
+                    value = viewModel.emailRegistro,
+                    onValueChange = { viewModel.emailRegistro = it },
+                    label = { Text("Email") },
+                    modifier = Modifier.fillMaxWidth().then(autoScrollModifier),
+                    shape = RoundedCornerShape(12.dp),
+                    singleLine = true
+                )
+            }
 
-        Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
-        AutoScrollTextField { autoScrollModifier ->
-        OutlinedTextField(
-            value = viewModel.passwordRegistro,
-            onValueChange = { viewModel.passwordRegistro = it },
-            label = { Text("Contraseña") },
-            modifier = Modifier.fillMaxWidth().then(autoScrollModifier),
-            shape = RoundedCornerShape(12.dp),
-            singleLine = true
-        )
-        }
+// Contraseña registro
+            AutoScrollTextField { autoScrollModifier ->
+                OutlinedTextField(
+                    value = viewModel.passwordRegistro,
+                    onValueChange = { viewModel.passwordRegistro = it },
+                    label = { Text("Contraseña") },
+                    modifier = Modifier.fillMaxWidth().then(autoScrollModifier),
+                    shape = RoundedCornerShape(12.dp),
+                    singleLine = true
+                )
+            }
+
 
         Spacer(modifier = Modifier.height(20.dp))
 

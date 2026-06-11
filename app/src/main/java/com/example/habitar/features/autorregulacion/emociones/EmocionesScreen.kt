@@ -44,6 +44,7 @@ fun EmocionesScreen(
         listOf("Feliz", "Eufórico", "Confundido", "Triste", "Enojado", "Frustrado")
 
     val activity = LocalActivity.current as androidx.activity.ComponentActivity
+    val focusManager = androidx.compose.ui.platform.LocalFocusManager.current
 
     DisposableEffect(Unit) {
         val originalMode = activity.window.attributes.softInputMode
@@ -175,7 +176,8 @@ fun EmocionesScreen(
 
         // --- COMPONENTE: BOTÓN ACCIÓN IA ---
         Button(
-            onClick = { viewModel.enviarFormularioEmociones() },
+            onClick = { viewModel.enviarFormularioEmociones()
+                        focusManager.clearFocus()},
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp),
@@ -188,10 +190,11 @@ fun EmocionesScreen(
             enabled = !viewModel.estaProcesando &&
                     (viewModel.comentarioUsuario.isNotBlank() || viewModel.emocionesSeleccionadas.isNotEmpty())
         ) {
-            Text(
-                text = if (viewModel.estaProcesando) "Procesando..." else "Pedir consejo a HabiTAR",
-                fontWeight = FontWeight.Bold
-            )
+            if (viewModel.estaProcesando) {  // 👈 agrega esto
+                CircularProgressIndicator(color = Color.White, modifier = Modifier.size(20.dp))
+            } else {
+                Text("Pedir consejo a HabiTAR", fontWeight = FontWeight.Bold)
+            }
         }
 
         // Línea estética decorativa de 4dp de grosor.

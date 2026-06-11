@@ -18,6 +18,7 @@ class AuthViewModel(private val repository: AuthRepository = AuthRepository()) :
     var emailRegistro by mutableStateOf("")
     var passwordRegistro by mutableStateOf("")
     var edadRegistro by mutableStateOf("") // Si usas la edad
+    var telefonoRegistro by mutableStateOf("") //NUEVITO
 
     // Estados de la interfaz (Cargando, Éxito, Error)
     var estaCargando by mutableStateOf(false)
@@ -60,6 +61,11 @@ class AuthViewModel(private val repository: AuthRepository = AuthRepository()) :
 
         if (emailLimpio.isBlank() || passwordLimpia.isBlank() || nombreLimpio.isBlank() || edadLimpio.isBlank()) {
             mensajeError = "Por favor, completa todos los campos"
+            return
+        }
+
+        if (passwordLimpia.length < 6) {
+            mensajeError = "La contraseña debe tener al menos 6 caracteres"
             return
         }
 
