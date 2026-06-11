@@ -257,7 +257,7 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // Botón final que dispara la lógica de registro y navegación al avatar
+        // Botón final con la lógica de registro y navegación al avatar
         AppButton(
             text = if (viewModel.estaCargando) "Registrando..." else "Crear Cuenta",
             onClick = { viewModel.ejecutarRegistro() }, // <-- CAMBIADO

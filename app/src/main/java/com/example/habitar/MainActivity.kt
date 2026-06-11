@@ -125,7 +125,7 @@ fun MainScreen() {
                 NavigationBar(
                     containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
                     tonalElevation = 8.dp,
-                    windowInsets = WindowInsets(0) // 👈 agrega esto
+                    windowInsets = WindowInsets(0) //
                 ) {
                     val items = listOf(
                         BottomBarItem.Menu,
