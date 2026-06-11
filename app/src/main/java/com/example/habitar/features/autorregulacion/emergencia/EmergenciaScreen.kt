@@ -2,6 +2,7 @@ package com.example.habitar.features.autorregulacion.emergencia
 
 import android.media.MediaPlayer
 import android.net.Uri
+import androidx.activity.compose.LocalActivity
 import androidx.annotation.OptIn
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -40,6 +41,18 @@ fun EmergenciaScreen(
     onNavigateToMenu: () -> Unit,
     viewModel: EmergenciaViewModel = viewModel()
     ) {
+
+    val activity = LocalActivity.current as androidx.activity.ComponentActivity
+    val focusManager = androidx.compose.ui.platform.LocalFocusManager.current
+
+    DisposableEffect(Unit) {
+        val originalMode = activity.window.attributes.softInputMode
+        activity.window.setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+        onDispose {
+            activity.window.setSoftInputMode(originalMode)
+        }
+    }
+
     val context = LocalContext.current
     val coralPrincipal = Color(0xFFF4B3A3) // El color salmón de los botones
     val coralSuave = Color(0xFFFDE8E3)    // Para el estado seleccionado (invertido)
@@ -183,7 +196,8 @@ fun EmergenciaScreen(
 
         // --- BOTÓN MANDAR A IA (DINÁMICO) ---
         Button(
-            onClick = { viewModel.pedirConsejoYRegistrar() },
+            onClick = { viewModel.pedirConsejoYRegistrar()
+                        focusManager.clearFocus()},
             modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
             shape = CircleShape,
             colors = ButtonDefaults.buttonColors(containerColor = coralPrincipal),

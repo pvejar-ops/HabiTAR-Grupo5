@@ -1,5 +1,6 @@
 package com.example.habitar.features.autorregulacion.sensaciones
 
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -33,14 +34,27 @@ fun SensacionesScreen(
         "Taquicardia", "Sudoración", "Picazón",
         "Tensión Muscular", "Náuseas", "Dolor Físico"
     )
+
+    val focusManager = androidx.compose.ui.platform.LocalFocusManager.current
+    val activity = LocalActivity.current as androidx.activity.ComponentActivity
+
+    DisposableEffect(Unit) {
+        val originalMode = activity.window.attributes.softInputMode
+        activity.window.setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+
+        onDispose {
+            activity.window.setSoftInputMode(originalMode) // 👈 restaura al salir
+        }
+    }
+
     // Contenedor principal con scroll vertical para evitar cortes en pantallas pequeñas.
     Column(
         modifier = Modifier
-            .fillMaxSize() // Expande el contenedor a todo el espacio disponible.
+            .fillMaxWidth() // Expande el contenedor a todo el espacio disponible.
             .statusBarsPadding()
             .verticalScroll(rememberScrollState()) // Activa el desplazamiento si el contenido crece.
             .padding(24.dp)
-            .imePadding(), // Margen de seguridad de 24dp en todos los bordes.
+           .imePadding(), // Margen de seguridad de 24dp en todos los bordes.
         horizontalAlignment = Alignment.CenterHorizontally // Centra los componentes hijos horizontalmente.
     ) {
 
@@ -158,7 +172,8 @@ fun SensacionesScreen(
 
         // --- FUNCIÓN: BOTÓN DE ACCIÓN PARA IA ---
         Button(
-            onClick = { viewModel.enviarFormularioSensaciones() },
+            onClick = { viewModel.enviarFormularioSensaciones()
+                        focusManager.clearFocus()},
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp),
@@ -171,7 +186,11 @@ fun SensacionesScreen(
             enabled = !viewModel.estaProcesando &&
                     (viewModel.comentarioUsuario.isNotBlank() || viewModel.sensacionesSeleccionadas.isNotEmpty())
         ) {
-            Text("Pedir consejo a HabiTAR", fontWeight = FontWeight.Bold)
+                if (viewModel.estaProcesando) {  // 👈 agrega esto
+                    CircularProgressIndicator(color = Color.White, modifier = Modifier.size(20.dp))
+                } else {
+                    Text("Pedir consejo a HabiTAR", fontWeight = FontWeight.Bold)
+                }
         }
 
         // Línea decorativa para separar visualmente la entrada de la respuesta.
@@ -241,6 +260,7 @@ fun SensacionesScreen(
         }
     }
 }
+
 
 /**
  * Componente personalizado para los Chips de Sensación.
