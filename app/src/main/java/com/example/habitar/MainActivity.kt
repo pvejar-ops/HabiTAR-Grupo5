@@ -57,23 +57,45 @@ class MainActivity : ComponentActivity() {
     }
     private fun programarNotificacionDiaria() {
         val ahora = Calendar.getInstance()
-        val objetivo = Calendar.getInstance().apply {
+
+        // --- 9 AM ---
+        val objetivo9AM = Calendar.getInstance().apply {
             set(Calendar.HOUR_OF_DAY, 9)
             set(Calendar.MINUTE, 0)
             set(Calendar.SECOND, 0)
             if (before(ahora)) add(Calendar.DAY_OF_MONTH, 1)
         }
-        val delay = objetivo.timeInMillis - ahora.timeInMillis
-        val request = PeriodicWorkRequestBuilder<NotificacionWorker>(1, TimeUnit.HOURS) // 👈 DAYS por HOURS
-            .setInitialDelay(delay, TimeUnit.MILLISECONDS)
+        val delay9AM = objetivo9AM.timeInMillis - ahora.timeInMillis
+
+        val request9AM = PeriodicWorkRequestBuilder<NotificacionWorker>(1, TimeUnit.DAYS)
+            .setInitialDelay(delay9AM, TimeUnit.MILLISECONDS)
             .build()
+
         WorkManager.getInstance(applicationContext).enqueueUniquePeriodicWork(
-            "notificacion_diaria",
-            ExistingPeriodicWorkPolicy.KEEP,
-            request
+            "notificacion_9am",
+            ExistingPeriodicWorkPolicy.UPDATE,
+            request9AM
+        )
+
+        // --- 9 PM ---
+        val objetivo9PM = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, 21)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            if (before(ahora)) add(Calendar.DAY_OF_MONTH, 1)
+        }
+        val delay9PM = objetivo9PM.timeInMillis - ahora.timeInMillis
+
+        val request9PM = PeriodicWorkRequestBuilder<NotificacionWorker>(1, TimeUnit.DAYS)
+            .setInitialDelay(delay9PM, TimeUnit.MILLISECONDS)
+            .build()
+
+        WorkManager.getInstance(applicationContext).enqueueUniquePeriodicWork(
+            "notificacion_9pm",
+            ExistingPeriodicWorkPolicy.UPDATE,
+            request9PM
         )
     }
-}
 
 @Composable
 fun MainScreen() {
@@ -103,7 +125,7 @@ fun MainScreen() {
                 NavigationBar(
                     containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
                     tonalElevation = 8.dp,
-                    windowInsets = WindowInsets(0) // 👈 agrega esto
+                    windowInsets = WindowInsets(0) //
                 ) {
                     val items = listOf(
                         BottomBarItem.Menu,
@@ -151,4 +173,5 @@ fun MainScreen() {
             modifier = Modifier.padding(innerPadding)
         )
     }
+}
 }

@@ -17,8 +17,9 @@ class AuthViewModel(private val repository: AuthRepository = AuthRepository()) :
     var nombreRegistro by mutableStateOf("")
     var emailRegistro by mutableStateOf("")
     var passwordRegistro by mutableStateOf("")
-    var edadRegistro by mutableStateOf("") // Si usas la edad
+    var edadRegistro by mutableStateOf("") //
     var telefonoRegistro by mutableStateOf("") //NUEVITO
+    var carreraRegistro by mutableStateOf("")
 
     // Estados de la interfaz (Cargando, Éxito, Error)
     var estaCargando by mutableStateOf(false)
