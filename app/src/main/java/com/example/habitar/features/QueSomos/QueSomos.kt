@@ -45,18 +45,10 @@ fun QueSomosScreen(onNavigateToAuth: () -> Unit) {
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "HABITAR",
-                fontSize = 36.sp,
-                fontWeight = FontWeight.Bold,
-                color = moradoOscuro
-            )
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            Text(
                 text = "Bienvenido/a a HabiTAR",
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
+                fontSize = 36.sp,
                 color = moradoOscuro,
                 textAlign = TextAlign.Center
             )
@@ -76,7 +68,7 @@ fun QueSomosScreen(onNavigateToAuth: () -> Unit) {
                 lineHeight = 20.sp
             )
 
-            Spacer(modifier = Modifier.height(28.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             Text(
                 text = "¿QUÉ ENCONTRARÁS?",

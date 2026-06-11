@@ -214,6 +214,20 @@ fun LoginScreen(
             }
             Spacer(modifier = Modifier.height(8.dp))
 
+// --- Carrera registro ---
+            AutoScrollTextField { autoScrollModifier ->
+                OutlinedTextField(
+                    value = viewModel.carreraRegistro,
+                    onValueChange = { viewModel.carreraRegistro = it },
+                    label = { Text("Carrera") },
+                    modifier = Modifier.fillMaxWidth().then(autoScrollModifier),
+                    shape = RoundedCornerShape(12.dp),
+                    singleLine = true
+                )
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
 // Email registro
             AutoScrollTextField { autoScrollModifier ->
                 OutlinedTextField(
