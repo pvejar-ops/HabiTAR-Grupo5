@@ -55,7 +55,7 @@ fun EmergenciaScreen(
 
     val context = LocalContext.current
     val coralPrincipal = Color(0xFFF4B3A3) // El color salmón de los botones
-    val coralSuave = Color(0xFFFDE8E3)    // Para el estado seleccionado (invertidos)
+    val coralSuave = Color(0xFFFDE8E3)    // Para el estado seleccionado (invertido)
     val grisEncabezado = Color(0xFFE0E0E0)
     val fondoTarjeta = Color(0xFFF8F8F8)
 

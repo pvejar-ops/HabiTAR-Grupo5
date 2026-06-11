@@ -121,7 +121,7 @@ fun QueSomosScreen(onNavigateToAuth: () -> Unit) {
                 }
             }
 
-            // Separador
+            // Separado
             Spacer(modifier = Modifier.height(20.dp))
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                 HorizontalDivider(modifier = Modifier.weight(1f), thickness = 5.dp, color = moradoMedio)
