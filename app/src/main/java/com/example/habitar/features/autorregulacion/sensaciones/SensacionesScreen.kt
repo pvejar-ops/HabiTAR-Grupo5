@@ -166,7 +166,7 @@ fun SensacionesScreen(
             maxLines = 4,
             colors = OutlinedTextFieldDefaults.colors(
                 unfocusedBorderColor = Color(0xFFE0E0E0), // Gris cuando no hay foco.
-                focusedBorderColor = Color(0xFF9291F3)    // Lila cuando el usuario está escribiendo.
+                focusedBorderColor = Color(0xFF9291F3)    // Lila cuando el usuario está escribiendo
             )
         )
 

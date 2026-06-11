@@ -84,7 +84,7 @@ fun MeditacionScreen(
         "Mañana" -> Color(0xFFFFF9C4) // Un amarillo muy claro
         "Tarde" -> Color(0xFFFFE0B2)  // Un naranja suave
         "Noche" -> Color(0xFFC5CAE9)  // Un azul oscuro/lavanda
-        else -> Color.White           // Blanco si no hay nada seleccionado
+        else -> Color.White           // Blanco si no hay nada seleccionadoo
     }
 
     val animatedBgColor by animateColorAsState(

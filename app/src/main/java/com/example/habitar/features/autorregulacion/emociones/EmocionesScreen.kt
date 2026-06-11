@@ -184,7 +184,7 @@ fun EmocionesScreen(
             shape = CircleShape,
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xFFD671F5), // Fondo rosa sólido.
-                contentColor = Color.White        // Texto del botón en blanco.
+                contentColor = Color.White        // Texto del botón en blanco..
             ),
             // Se bloquea si está cargando o si no ha marcado nada
             enabled = !viewModel.estaProcesando &&
