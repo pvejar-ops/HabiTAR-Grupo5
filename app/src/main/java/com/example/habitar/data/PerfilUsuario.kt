@@ -18,5 +18,11 @@ data class PerfilUsuario(
     val edad: Int,
 
     @SerialName("contrasenia") // <-- Nombre exacto en tu BDD
-    val contrasenia: String
+    val contrasenia: String,
+
+    @SerialName("carrera")
+    val carrera: String,
+
+    @SerialName("telefono")
+    val telefono: String
 )

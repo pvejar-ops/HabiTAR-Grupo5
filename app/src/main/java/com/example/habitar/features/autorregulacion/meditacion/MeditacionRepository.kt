@@ -35,24 +35,24 @@ class MeditacionRepository {
         }
     }
 
-    // 2. Guardar la meditación realizada por el usuario
-    suspend fun guardarHistorialMeditacion(idRecurso: Int): Boolean = withContext(Dispatchers.IO) {
+
+    suspend fun registrarEntradaMeditacion(): Boolean = withContext(Dispatchers.IO) {
         try {
             val userId = client.auth.currentUserOrNull()?.id
             if (userId != null) {
                 val registro = MeditacionRegistro(
                     id_usuario = userId,
-                    id_recurso = idRecurso,
+                    id_recurso = null
                 )
                 client.from("historial_meditacion").insert(registro)
-                Log.d("HABITAR_MEDITACION", "Meditación guardada con éxito.")
+                Log.d("HABITAR_MEDITACION", "Entrada a meditación registrada.")
                 true
             } else {
                 Log.e("HABITAR_MEDITACION", "Usuario no autenticado.")
                 false
             }
         } catch (e: Exception) {
-            Log.e("HABITAR_MEDITACION", "Error al guardar en historial_meditacion: ${e.message}")
+            Log.e("HABITAR_MEDITACION", "Error al registrar entrada: ${e.message}")
             false
         }
     }

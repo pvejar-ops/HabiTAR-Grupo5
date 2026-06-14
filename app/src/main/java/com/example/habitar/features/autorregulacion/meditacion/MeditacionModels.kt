@@ -16,5 +16,5 @@ data class RecursoModulo(
 @Serializable
 data class MeditacionRegistro(
     val id_usuario: String,
-    val id_recurso: Int,
+    val id_recurso: Int? = null
 )

@@ -21,6 +21,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.habitar.features.auth.AuthViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material.icons.Icons
 
 @Composable
 fun AutoScrollTextField(content: @Composable (Modifier) -> Unit) {
@@ -60,6 +65,10 @@ fun LoginScreen(
             onRegisterSuccess()
         }
     }
+
+    var mostrarPasswordLogin by remember { mutableStateOf(false) }
+    var mostrarPasswordRegistro by remember { mutableStateOf(false) }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -76,17 +85,7 @@ fun LoginScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
-        // --- VARIABLES DE ESTADO (Manejo de Datos) ---
-        // 'remember' permite que el valor persista aunque la pantalla se redibuje
-        // 'mutableStateOf' hace que la interfaz se actualice automáticamente al escribir
-        //var email by remember { mutableStateOf("") }
-        //var contraseña by remember { mutableStateOf("") }
-        //var nombre by remember { mutableStateOf("") }
-        //var edad by remember { mutableStateOf("") }// var telefonoRegistro by mutableStateOf("")
-
-
-        // Spacer: Crea un espacio vacío para separar elementos (en este caso, del borde superior)
-        Spacer(modifier = Modifier.height(40.dp))
+        Spacer(modifier = Modifier.height(30.dp))
 
         // Título de la sección de inicio de sesión
         Text(
@@ -95,7 +94,7 @@ fun LoginScreen(
             fontWeight = FontWeight.Bold
         )
 
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
         // OutlinedTextField: Campo de texto con borde para la entrada del correo
         AutoScrollTextField { autoScrollModifier ->
@@ -112,22 +111,59 @@ fun LoginScreen(
         Spacer(modifier = Modifier.height(8.dp))
 
         // Campo de texto para la contraseña
-        AutoScrollTextField { autoScrollModifier ->
-        OutlinedTextField(
-            value = viewModel.passwordLogin,
-            onValueChange = { viewModel.passwordLogin = it },
-            label = { Text("Contraseña") },
-            modifier = Modifier.fillMaxWidth().then(autoScrollModifier),
-            shape = RoundedCornerShape(12.dp),
-            singleLine = true
-        )
-        }
-        Spacer(modifier = Modifier.height(32.dp))
+            AutoScrollTextField { autoScrollModifier ->
+                OutlinedTextField(
+                    value = viewModel.passwordLogin,
+                    onValueChange = { viewModel.passwordLogin = it },
+                    label = { Text("Contraseña") },
+                    visualTransformation = if (mostrarPasswordLogin) VisualTransformation.None else PasswordVisualTransformation(),
+                    trailingIcon = {
+                        IconButton(onClick = { mostrarPasswordLogin = !mostrarPasswordLogin }) {
+                            Icon(
+                                imageVector = if (mostrarPasswordLogin) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                                contentDescription = if (mostrarPasswordLogin) "Ocultar" else "Mostrar"
+                            )
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth().then(autoScrollModifier),
+                    shape = RoundedCornerShape(12.dp),
+                    singleLine = true
+                )
+            }
+        Spacer(modifier = Modifier.height(4.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Checkbox(
+                        checked = viewModel.recordarme,
+                        onCheckedChange = { viewModel.recordarme = it },
+                        colors = CheckboxDefaults.colors(
+                            checkedColor = Color(0xFF5E5CE6)
+                        )
+                    )
+                    Text(
+                        text = "Recordarme",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color(0xFF49454F)
+                    )
+                }
+                TextButton(onClick = { viewModel.enviarCorreoRestablecimiento() }) {
+                    Text(
+                        text = "¿Olvidaste tu contraseña?",
+                        color = Color(0xFF5E5CE6),
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
+            }
 
+            val context = androidx.compose.ui.platform.LocalContext.current
         // AppButton: Botón de inicio de sesión
         AppButton(
             text = if (viewModel.estaCargando) "Cargando..." else "Iniciar Sesión",
-            onClick = { viewModel.ejecutarLogin() }, // <-- CAMBIADO
+            onClick = { viewModel.ejecutarLogin(context) }, // <-- CAMBIADO
             enabled = !viewModel.estaCargando,       // <-- NUEVO
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xFF5E5CE6), // Color principal personalizado (Morado/Azul)
@@ -135,6 +171,16 @@ fun LoginScreen(
             ),
             modifier = Modifier.fillMaxWidth()
         )
+        if (viewModel.mensajeRestablecimiento != null) {
+            Spacer(modifier = Modifier.height(12.dp))
+            Text(
+                text = viewModel.mensajeRestablecimiento ?: "",
+                color = Color(0xFF4CAF50),
+                fontWeight = FontWeight.Medium,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
+            )
+        }
 
         Spacer(modifier = Modifier.height(24.dp))
 
@@ -248,6 +294,15 @@ fun LoginScreen(
                     value = viewModel.passwordRegistro,
                     onValueChange = { viewModel.passwordRegistro = it },
                     label = { Text("Contraseña") },
+                    visualTransformation = if (mostrarPasswordRegistro) VisualTransformation.None else PasswordVisualTransformation(),
+                    trailingIcon = {
+                        IconButton(onClick = { mostrarPasswordRegistro = !mostrarPasswordRegistro }) {
+                            Icon(
+                                imageVector = if (mostrarPasswordRegistro) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                                contentDescription = if (mostrarPasswordRegistro) "Ocultar" else "Mostrar"
+                            )
+                        }
+                    },
                     modifier = Modifier.fillMaxWidth().then(autoScrollModifier),
                     shape = RoundedCornerShape(12.dp),
                     singleLine = true

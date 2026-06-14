@@ -83,4 +83,7 @@ dependencies {
     implementation("androidx.media3:media3-ui:1.3.1")
     implementation("com.google.ai.client.generativeai:generativeai:0.9.0") // SDK oficial de Google AI para Android
     implementation("io.noties.markwon:core:4.6.2") //Para renderizar respuesta ia
+    implementation("io.github.jan-tennert.supabase:storage-kt:2.6.1") // Storage supabase
+    implementation("io.ktor:ktor-client-content-negotiation:2.3.11")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.11")
 }
