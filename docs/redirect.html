@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Redirigiendo a HabiTAR...</title>
+  <script>
+    window.onload = function () {
+      const hash = window.location.hash.substring(1);
+      const params = new URLSearchParams(hash);
+      const accessToken = params.get('access_token');
+      const refreshToken = params.get('refresh_token');
+      const type = params.get('type');
+
+      if (type === 'recovery' && accessToken) {
+        const deeplink = `habitar://reset-password?access_token=${accessToken}&refresh_token=${refreshToken}&type=recovery`;
+        window.location.href = deeplink;
+      }
+    };
+  </script>
+</head>
+<body>
+  <p style="font-family:Arial; text-align:center; margin-top:40px;">
+    Redirigiendo a HabiTAR...
+  </p>
+</body>
+</html>
