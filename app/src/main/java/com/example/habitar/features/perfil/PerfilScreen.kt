@@ -20,14 +20,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.compose.material.icons.filled.History
+import androidx.compose.runtime.LaunchedEffect
 
 @Composable
 fun PerfilScreen(
     navController: NavController,
-    viewModel: PerfilViewModel = viewModel()
+    //viewModel: PerfilViewModel = viewModel()
+    viewModel: PerfilViewModel
 ) {
     val perfil = viewModel.perfil
     val estaCargando = viewModel.estaCargando
+
+    LaunchedEffect(Unit) {
+        viewModel.cargarPerfil()
+    }
 
     Column(
         modifier = Modifier
@@ -95,16 +102,27 @@ fun PerfilScreen(
 
         // 3. Opciones de Configuración
         Column(modifier = Modifier.fillMaxWidth()) {
-            PerfilOptionItem(titulo = "Editar Perfil", icono = Icons.Default.Edit)
-            //PerfilOptionItem(titulo = "Ajustes de la App", icono = Icons.Default.Settings)
+            PerfilOptionItem(
+                titulo = "Editar Perfil",
+                icono = Icons.Default.Edit,
+                onClick = {
+                    android.util.Log.d("PERFIL", "Navegando a editar perfil")
+                    navController.navigate("editar_perfil_screen") }
+            )
+            PerfilOptionItem(
+                titulo = "Ver mi historial",
+                icono = Icons.Default.History,
+                onClick = { navController.navigate("historial_screen") }
+            )
         }
 
         Spacer(modifier = Modifier.weight(1f))
 
         // 4. Botón de Cerrar Sesión
         Button(
-            onClick = { viewModel.cerrarSesion {
-                // Navega al Login, por ejemplo:
+            onClick = {
+                viewModel.limpiarPerfil()
+                viewModel.cerrarSesion {
                 navController.navigate("inicio_screen") {
                     popUpTo(0) { inclusive = true } // Limpia la pila de navegación
                 }
@@ -118,9 +136,9 @@ fun PerfilScreen(
 }
 
 @Composable
-fun PerfilOptionItem(titulo: String, icono: ImageVector) {
+fun PerfilOptionItem(titulo: String, icono: ImageVector, onClick: () -> Unit = {}) {
     Surface(
-        onClick = { /* Navegar a la opción */ },
+        onClick = onClick,
         modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
         shape = MaterialTheme.shapes.medium,
         color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)

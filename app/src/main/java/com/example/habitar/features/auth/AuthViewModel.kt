@@ -5,6 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.habitar.core.SupabaseConfig
+import io.github.jan.supabase.gotrue.auth
 import kotlinx.coroutines.launch
 
 class AuthViewModel(private val repository: AuthRepository = AuthRepository()) : ViewModel() {
@@ -30,9 +32,10 @@ class AuthViewModel(private val repository: AuthRepository = AuthRepository()) :
         private set
     var registroExitoso by mutableStateOf(false)
         private set
+    var recordarme by mutableStateOf(false)
 
     // Función para Iniciar Sesión
-    fun ejecutarLogin() {
+    fun ejecutarLogin(contexto: android.content.Context) {
         if (emailLogin.isBlank() || passwordLogin.isBlank()) {
             mensajeError = "Por favor, completa todos los campos"
             return
@@ -45,6 +48,9 @@ class AuthViewModel(private val repository: AuthRepository = AuthRepository()) :
             estaCargando = false
 
             if (resultado) {
+                // Guardar preferencia de recordarme
+                val prefs = contexto.getSharedPreferences("habitar_prefs", android.content.Context.MODE_PRIVATE)
+                prefs.edit().putBoolean("recordarme", recordarme).apply()
                 loginExitoso = true
             } else {
                 mensajeError = "Correo o contraseña incorrectos"
@@ -59,8 +65,10 @@ class AuthViewModel(private val repository: AuthRepository = AuthRepository()) :
         val passwordLimpia = passwordRegistro.trim()
         val nombreLimpio = nombreRegistro.trim()
         val edadLimpio = edadRegistro.trim()
+        val carreraLimpio = carreraRegistro.trim()
+        val telefonoLimpio = telefonoRegistro.trim()
 
-        if (emailLimpio.isBlank() || passwordLimpia.isBlank() || nombreLimpio.isBlank() || edadLimpio.isBlank()) {
+        if (emailLimpio.isBlank() || passwordLimpia.isBlank() || nombreLimpio.isBlank() || edadLimpio.isBlank() || carreraLimpio.isBlank() || telefonoLimpio.isBlank()) {
             mensajeError = "Por favor, completa todos los campos"
             return
         }
@@ -74,7 +82,7 @@ class AuthViewModel(private val repository: AuthRepository = AuthRepository()) :
             estaCargando = true
             mensajeError = null
             val edadEntero = edadLimpio.toIntOrNull() ?: 0
-            val resultado = repository.registrarEstudiante(emailLimpio, passwordLimpia, nombreLimpio, edadEntero)
+            val resultado = repository.registrarEstudiante(emailLimpio, passwordLimpia, nombreLimpio, edadEntero, carreraLimpio, telefonoLimpio)
             estaCargando = false
 
             if (resultado) {
@@ -88,5 +96,25 @@ class AuthViewModel(private val repository: AuthRepository = AuthRepository()) :
     // Resetear estados al cambiar de pantalla
     fun limpiarMensajes() {
         mensajeError = null
+    }
+
+    var mensajeRestablecimiento by mutableStateOf<String?>(null)
+
+    fun enviarCorreoRestablecimiento() {
+        if (emailLogin.isBlank()) {
+            mensajeError = "Ingresa tu email primero para restablecer la contraseña."
+            return
+        }
+        viewModelScope.launch {
+            estaCargando = true
+            try {
+                SupabaseConfig.client.auth.resetPasswordForEmail(emailLogin)
+                mensajeRestablecimiento = "Te enviamos un correo para restablecer tu contraseña."
+            } catch (e: Exception) {
+                mensajeError = "Error al enviar el correo: ${e.localizedMessage}"
+            } finally {
+                estaCargando = false
+            }
+        }
     }
 }

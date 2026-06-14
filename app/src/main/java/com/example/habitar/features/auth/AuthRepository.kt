@@ -14,7 +14,7 @@ class AuthRepository {
     private val client = SupabaseConfig.client
 
     // 1. REGISTRO + CREACIÓN DE PERFIL INICIAL
-    suspend fun registrarEstudiante(email: String, contrasenia: String, nombre: String, edad: Int): Boolean = withContext(Dispatchers.IO) {
+    suspend fun registrarEstudiante(email: String, contrasenia: String, nombre: String, edad: Int, carrera: String, telefono: String): Boolean = withContext(Dispatchers.IO) {
         try {
             // Registrar credenciales en Supabase Auth
             val authResult = client.auth.signUpWith(Email) {
@@ -33,7 +33,9 @@ class AuthRepository {
                     nombreUsuario = nombre,
                     correoElectronico = email,
                     edad = edad,
-                    contrasenia = contrasenia
+                    contrasenia = contrasenia,
+                    carrera = carrera, // Añadir propiedad
+                    telefono = telefono // Añadir propiedad
                 )
 
                 // Insertar en tu tabla real 'perfil_usuario'

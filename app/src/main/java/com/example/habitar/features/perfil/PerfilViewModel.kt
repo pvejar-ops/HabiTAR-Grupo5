@@ -78,4 +78,10 @@ class PerfilViewModel(
         }
     }
 
+    fun limpiarPerfil() {
+        perfil = null
+        mensajeError = null
+        operacionExitosa = null
+    }
+
 }

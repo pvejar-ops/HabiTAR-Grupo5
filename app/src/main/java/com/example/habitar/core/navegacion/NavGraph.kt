@@ -6,6 +6,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navDeepLink
 import com.example.habitar.features.QueSomos.QueSomosScreen
 //Screens de las carpetas features
 import com.example.habitar.features.auth.LoginScreen
@@ -20,6 +21,11 @@ import com.example.habitar.features.perfil.PerfilScreen
 import com.example.habitar.features.calendario.CalendarioScreen
 import com.example.habitar.features.organiza.OrganizaDiaScreen
 import com.example.habitar.features.caracterizacionIA.CaracterizacionIAScreen
+import com.example.habitar.features.historial.HistorialScreen
+import com.example.habitar.features.auth.ResetPasswordScreen
+import com.example.habitar.features.editarPerfil.EditarPerfilScreen
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.habitar.features.perfil.PerfilViewModel
 
 sealed class Screen(val route: String) {
     object Inicio : Screen("inicio_screen")
@@ -32,22 +38,24 @@ sealed class Screen(val route: String) {
     object Sensaciones : Screen("sensaciones_screen")
     object Perfil : Screen("perfil_screen")
     object Calendario : Screen("calendario_screen")
-    // 🌟 Antes: object OrganizaDia : Screen("organiza_dia_screen")
-    // 🌟 Ahora: Soporta un argumento opcional usando la sintaxis estándar de URL (?fecha={fecha})
     object OrganizaDia : Screen("organiza_dia_screen?fecha={fecha}")
     object QueSomos : Screen(route = "que_somos_screen")
-
     object CaracterizacionDeIA : Screen(route = "caracterizacion_ia")
+    object Historial : Screen("historial_screen")
 }
 
 @Composable
 fun AppNavGraph(
     navController: NavHostController, // Este debe ser el mismo de la MainActivity
+    startDestination: String = Screen.Inicio.route, // <- NUEVO!!!
     modifier: Modifier = Modifier
 ) {
+    val perfilViewModel: PerfilViewModel = viewModel() // NUEVO!!
+
     NavHost(
         navController = navController,
-        startDestination = Screen.Inicio.route,
+        //startDestination = Screen.Inicio.route,
+        startDestination = startDestination, // <- NUEVO!!!
         modifier = modifier
     ) {
         // 1. Flujo de Bienvenida y Auth
@@ -173,7 +181,41 @@ fun AppNavGraph(
         composable(Screen.Meditacion.route) { MeditacionScreen(onNavigateToMenu = { navController.popBackStack() }) }
         composable(Screen.Emergencia.route) { EmergenciaScreen(onNavigateToMenu = { navController.popBackStack() }) }
         composable(Screen.Sensaciones.route) { SensacionesScreen(onNavigateToMenu = { navController.popBackStack() }) }
-        composable(Screen.Perfil.route) { PerfilScreen(navController = navController) }
+        composable(Screen.Perfil.route) { PerfilScreen(navController = navController, viewModel = perfilViewModel) }
+
+        // Historial
+        composable("historial_screen") {
+            HistorialScreen(
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
+
+        composable(
+            route = "reset_password_screen/{token}",
+            deepLinks = listOf(
+                navDeepLink {
+                    uriPattern = "habitar://reset-password?access_token={token}&refresh_token={refreshToken}&type=recovery"
+                }
+            )
+        ) { backStackEntry ->
+            val token = backStackEntry.arguments?.getString("token") ?: ""
+            ResetPasswordScreen(
+                token = token,
+                onResetSuccess = {
+                    navController.navigate(Screen.Auth.route) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                },
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
+
+        composable("editar_perfil_screen") {
+            EditarPerfilScreen(
+                viewModel = perfilViewModel,
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
     }
 }
 
