@@ -49,7 +49,7 @@ fun HistorialScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        // Botón volver
+        // Botón volver.
         item {
             Box(modifier = Modifier.fillMaxWidth()) {
                 IconButton(

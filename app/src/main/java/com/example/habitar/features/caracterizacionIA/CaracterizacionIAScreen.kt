@@ -23,7 +23,7 @@ fun CaracterizacionIAScreen(
     onTodoListoSuccess: () -> Unit, // Navega al menú principal al guardar con éxito
     viewModel: PreferenciasViewModel = viewModel(),
 ) {
-    // Escuchar si Supabase guardó con éxito para cambiar de pantalla
+    // Escuchar si Supabase guardó con exito para cambiar de pantalla
     LaunchedEffect(viewModel.guardadoExitoso) {
         if (viewModel.guardadoExitoso) {
             onTodoListoSuccess() // <-- Ejecuta la navegación al menú de forma segura

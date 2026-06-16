@@ -69,7 +69,7 @@ class MainActivity : ComponentActivity() {
 
         handleIntent(intent)
 
-        // Verificar si hay sesión guardada
+        // Verificar si hay sesión guardada.
         runBlocking {
             try {
                 val prefs = getSharedPreferences("habitar_prefs", Context.MODE_PRIVATE)
