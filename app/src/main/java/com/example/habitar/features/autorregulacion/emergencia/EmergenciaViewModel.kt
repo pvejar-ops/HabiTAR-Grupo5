@@ -77,7 +77,7 @@ class EmergenciaViewModel(
         mensajeError = null
         guardadoExitoso = null
 
-        if (lugarSeleccionado.isBlank() || comentarioUsuario.isBlank()) {
+        if (lugarSeleccionado.isEmpty() || comentarioUsuario.isEmpty()) {
             mensajeError = "Asegúrate de completar el lugar y tus sensaciones."
             Log.w("DEBUG_EMERGENCIA", "⚠️ Guardado cancelado: Falta completar el lugar o el comentario.")
             return

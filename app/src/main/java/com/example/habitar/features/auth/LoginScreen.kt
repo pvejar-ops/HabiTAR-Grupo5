@@ -72,8 +72,8 @@ fun LoginScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFEEEEF8)) // 👈 primero el fondo
-            .imePadding()                  // 👈 luego el teclado
+            .background(Color(0xFFEEEEF8)) //
+            .imePadding()                  //
     ) {
     // Column: Organiza todos los elementos de forma vertical (uno sobre otro)
         Column(

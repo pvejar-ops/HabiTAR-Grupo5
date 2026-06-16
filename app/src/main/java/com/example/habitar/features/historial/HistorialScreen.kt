@@ -41,76 +41,80 @@ fun HistorialScreen(
 ) {
     val diaSeleccionado = viewModel.diaSeleccionado
 
-    Column(
+    LazyColumn(  // 👈 cambia Column por LazyColumn
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .statusBarsPadding(),
+        contentPadding = PaddingValues(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         // Botón volver
-        IconButton(
-            onClick = onNavigateBack,
-            modifier = Modifier
-                .background(color = Color(0xFFF3EDF7), shape = CircleShape)
-                .size(48.dp)
-                .align(Alignment.Start)
-        ) {
-            Icon(
-                imageVector = Icons.Default.ArrowBack,
-                contentDescription = "Volver",
-                tint = Color(0xFF6750A4)
-            )
-        }
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Text(
-            text = "Mi Historial",
-            color = Color.White,
-            fontWeight = FontWeight.Bold,
-            fontSize = 20.sp,
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Color(0xFF6750A4), CircleShape)
-                .padding(vertical = 12.dp),
-            textAlign = TextAlign.Center
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Leyenda de colores
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceAround
-        ) {
-            LeyendaItem("Emociones", colorEmociones)
-            LeyendaItem("Sensaciones", colorSensaciones)
-            LeyendaItem("Emergencia", colorEmergencia)
-            //LeyendaItem("Meditación", colorMeditacion)
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        if (viewModel.estaCargando) {
-            CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
-        } else if (viewModel.resumenDias.isEmpty()) {
-            Text(
-                text = "Aún no tienes registros en tu historial.",
-                color = Color.Gray,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth().padding(top = 32.dp)
-            )
-        } else {
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                contentPadding = PaddingValues(bottom = 16.dp)
+        item {
+            Box(modifier = Modifier.fillMaxWidth()) {
+                IconButton(
+                    onClick = onNavigateBack,
+                    modifier = Modifier
+                        .background(color = Color(0xFFF3EDF7), shape = CircleShape)
+                        .size(48.dp)
+                        .align(Alignment.CenterStart) // 👈 funciona dentro de Box
                 ) {
-                items(viewModel.resumenDias.entries.sortedByDescending { it.key }) { (fecha, resumen) ->
-                    TarjetaDia(
-                        fecha = fecha,
-                        resumen = resumen,
-                        onClick = { viewModel.seleccionarDia(fecha) }
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = "Volver",
+                        tint = Color(0xFF6750A4)
                     )
                 }
+            }
+        }
+
+        item {
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "Mi Historial",
+                color = Color.White,
+                fontWeight = FontWeight.Bold,
+                fontSize = 20.sp,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color(0xFF6750A4), CircleShape)
+                    .padding(vertical = 12.dp),
+                textAlign = TextAlign.Center
+            )
+        }
+
+        item {
+            Spacer(modifier = Modifier.height(8.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceAround
+            ) {
+                LeyendaItem("Emociones", colorEmociones)
+                LeyendaItem("Sensaciones", colorSensaciones)
+                LeyendaItem("Emergencia", colorEmergencia)
+            }
+        }
+
+        if (viewModel.estaCargando) {
+            item {
+                CircularProgressIndicator(modifier = Modifier.padding(top = 32.dp))
+            }
+        } else if (viewModel.resumenDias.isEmpty()) {
+            item {
+                Text(
+                    text = "Aún no tienes registros en tu historial.",
+                    color = Color.Gray,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth().padding(top = 32.dp)
+                )
+            }
+        } else {
+            items(viewModel.resumenDias.entries.sortedByDescending { it.key }.toList()) { (fecha, resumen) ->
+                TarjetaDia(
+                    fecha = fecha,
+                    resumen = resumen,
+                    onClick = { viewModel.seleccionarDia(fecha) }
+                )
             }
         }
     }

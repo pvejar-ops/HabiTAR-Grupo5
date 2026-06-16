@@ -23,7 +23,7 @@ fun CaracterizacionIAScreen(
     onTodoListoSuccess: () -> Unit, // Navega al menú principal al guardar con éxito
     viewModel: PreferenciasViewModel = viewModel(),
 ) {
-    // Escuchar si Supabase guardó con éxito para cambiar de pantalla
+    // Escuchar si Supabase guardó con exito para cambiar de pantalla
     LaunchedEffect(viewModel.guardadoExitoso) {
         if (viewModel.guardadoExitoso) {
             onTodoListoSuccess() // <-- Ejecuta la navegación al menú de forma segura
@@ -33,17 +33,18 @@ fun CaracterizacionIAScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFEEEEF8)) // 👈 primero el fondo
-            .imePadding()                  // 👈 luego el teclado
+            .background(Color(0xFFEEEEF8)) //
+            .imePadding()                  //
     ){
-    // Column con scroll: Vital para que si agregas muchas preguntas, el usuario pueda bajar.
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+    // Column con scroll: Vital para que si agregas muchas preguntas, el usuario pueda bajar
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState())
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Top
+        ) {
 
         // Título con estilo de cápsula
         Text(

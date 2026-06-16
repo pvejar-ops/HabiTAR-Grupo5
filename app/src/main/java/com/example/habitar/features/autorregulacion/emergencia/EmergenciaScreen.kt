@@ -197,18 +197,44 @@ fun EmergenciaScreen(
         // --- BOTÓN MANDAR A IA (DINÁMICO) ---
         Button(
             onClick = { viewModel.pedirConsejoYRegistrar()
-                        focusManager.clearFocus()},
-            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
+                focusManager.clearFocus()},
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
             shape = CircleShape,
-            colors = ButtonDefaults.buttonColors(containerColor = coralPrincipal),
-            enabled = !viewModel.estaProcesandoIA
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFFF4B3A3), // Fondo rosa sólido.
+                contentColor = Color.White        // Texto del botón en blanco.
+            ),
+            // Se bloquea si está cargando o si no ha marcado nada
+            enabled = !viewModel.estaProcesandoIA &&
+                    (viewModel.comentarioUsuario.isNotBlank() || viewModel.lugarSeleccionado.isNotEmpty())
         ) {
-            if (viewModel.estaProcesandoIA) {
+            if (viewModel.estaProcesandoIA) {  //
                 CircularProgressIndicator(color = Color.White, modifier = Modifier.size(20.dp))
             } else {
                 Text("Pedir consejo a HabiTAR", fontWeight = FontWeight.Bold)
             }
         }
+
+        Box(
+            modifier = Modifier
+                .width(200.dp)
+                .height(4.dp)
+                .background(color = Color(0xFFF4B3A3), shape = CircleShape)
+        )
+
+        // Muestra errores en rojo en la UI si la red o Supabase fallan
+        if (viewModel.mensajeError != null) {
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = viewModel.mensajeError ?: "",
+                color = Color.Red,
+                fontWeight = FontWeight.Medium,
+                textAlign = TextAlign.Center
+            )
+        }
+
 
         Spacer(modifier = Modifier.height(16.dp))
 

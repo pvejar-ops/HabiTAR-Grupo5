@@ -51,7 +51,7 @@ fun EmocionesScreen(
         activity.window.setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
 
         onDispose {
-            activity.window.setSoftInputMode(originalMode) // 👈 restaura al salir
+            activity.window.setSoftInputMode(originalMode) //
         }
     }
 
@@ -204,6 +204,16 @@ fun EmocionesScreen(
                 .height(4.dp)
                 .background(color = Color(0xFFD671F5), shape = CircleShape)
         )
+
+        if (viewModel.mensajeError != null) {
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = viewModel.mensajeError ?: "",
+                color = Color.Red,
+                fontWeight = FontWeight.Medium,
+                textAlign = TextAlign.Center
+            )
+        }
 
         Spacer(modifier = Modifier.height(24.dp))
 
