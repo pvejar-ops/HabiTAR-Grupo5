@@ -75,7 +75,7 @@ fun LoginScreen(
             .background(Color(0xFFEEEEF8)) //
             .imePadding()                  //
     ) {
-    // Column: Organiza todos los elementos de forma vertical (uno sobre otro).
+    // Column: Organiza todos los elementos de forma vertical (uno sobre otro)
         Column(
             modifier = Modifier
                 .fillMaxWidth()

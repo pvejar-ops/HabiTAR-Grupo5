@@ -69,7 +69,7 @@ class EmergenciaViewModel(
             recursoVisualSeleccionado = null
         } else {
             recursoVisualSeleccionado = recurso
-            recursoAuditivoSeleccionado = null // 🌟 CRUCIAL: Apaga el audio si se selecciona un video.
+            recursoAuditivoSeleccionado = null // 🌟 CRUCIAL: Apaga el audio si se selecciona un video
         }
     }
 

@@ -197,7 +197,7 @@ fun EmocionesScreen(
             }
         }
 
-        // Línea estética decorativa de 4dp de grosor
+        // Línea estética decorativa de 4dp de grosor.
         Box(
             modifier = Modifier
                 .width(200.dp)

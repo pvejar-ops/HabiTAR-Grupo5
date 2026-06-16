@@ -36,7 +36,7 @@ fun CaracterizacionIAScreen(
             .background(Color(0xFFEEEEF8)) //
             .imePadding()                  //
     ){
-    // Column con scroll: Vital para que si agregas muchas preguntas, el usuario pueda bajar.
+    // Column con scroll: Vital para que si agregas muchas preguntas, el usuario pueda bajar
         Column(
             modifier = Modifier
                 .fillMaxWidth()

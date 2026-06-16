@@ -67,7 +67,7 @@ fun OrganizaDiaScreen(
             .statusBarsPadding() // Protege la flecha de la barra de notificaciones arriba
     ) {
         // 💡 UN SOLO CONTENEDOR SCROLLEABLE
-        // Al meter la barra de agregar dentro de la misma LazyColumn como el último item
+        // Al meter la barra de agregar dentro de la misma LazyColumn como el último item.
         // logramos que todo pertenezca a la misma pestaña deslizable.
         LazyColumn(
             modifier = Modifier
