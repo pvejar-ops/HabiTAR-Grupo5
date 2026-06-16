@@ -185,7 +185,8 @@ class MainActivity : ComponentActivity() {
                     Screen.Sensaciones.route,
                     Screen.Meditacion.route,
                     Screen.Emergencia.route,
-                    Screen.OrganizaDia.route
+                    Screen.OrganizaDia.route,
+                    Screen.Historial.route
                 )
 
                 if (currentRoute in pantallasPrincipales) {

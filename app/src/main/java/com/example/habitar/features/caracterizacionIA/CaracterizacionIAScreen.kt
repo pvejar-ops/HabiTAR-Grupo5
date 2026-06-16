@@ -33,17 +33,18 @@ fun CaracterizacionIAScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFEEEEF8)) // 👈 primero el fondo
-            .imePadding()                  // 👈 luego el teclado
+            .background(Color(0xFFEEEEF8)) //
+            .imePadding()                  //
     ){
     // Column con scroll: Vital para que si agregas muchas preguntas, el usuario pueda bajar.
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState())
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Top
+        ) {
 
         // Título con estilo de cápsula
         Text(

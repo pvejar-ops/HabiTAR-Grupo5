@@ -50,7 +50,7 @@ fun OrganizaDiaScreen(
         activity.window.setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
 
         onDispose {
-            activity.window.setSoftInputMode(originalMode) // 👈 restaura al salir
+            activity.window.setSoftInputMode(originalMode) //
         }
     }
 
@@ -64,7 +64,6 @@ fun OrganizaDiaScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
             .statusBarsPadding() // Protege la flecha de la barra de notificaciones arriba
     ) {
         // 💡 UN SOLO CONTENEDOR SCROLLEABLE
