@@ -6,6 +6,7 @@ import android.content.Context
 import androidx.core.app.NotificationCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import com.example.habitar.R
 
 class NotificacionWorker(
     private val context: Context,
@@ -24,9 +25,9 @@ class NotificacionWorker(
         manager.createNotificationChannel(canal)
 
         val notificacion = NotificationCompat.Builder(context, "habitar_canal")
-            .setSmallIcon(android.R.drawable.ic_dialog_info)
+            .setSmallIcon(R.drawable.ic_notificacion)
             .setContentTitle("HabiTAR")
-            .setContentText("Habita con HabiTAR 🌟")
+            .setContentText("HabiTAR te acompaña 🌟")
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .build()
 
