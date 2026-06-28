@@ -31,6 +31,17 @@ android {
             "String",
             "GEMINI_API_KEY",
             "\"${localProps.getProperty("GEMINI_API_KEY") ?: ""}\"")
+
+        //Supabase
+        buildConfigField(
+            "String",
+            "SUPABASE_URL",
+            "\"${localProps.getProperty("SUPABASE_URL") ?: ""}\"")
+
+        buildConfigField(
+            "String",
+            "SUPABASE_KEY",
+            "\"${localProps.getProperty("SUPABASE_KEY") ?: ""}\"")
     }
 
     buildTypes {
