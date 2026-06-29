@@ -84,6 +84,8 @@ fun AppNavGraph(
                 onRegisterSuccess = {
                     // Si el usuario se está registrando, va al Avatar
                     navController.navigate(Screen.Avatar.route)
+                    //Para testeo con usuario evitamos pestaña de avatar y pasa directo al cuentanos de ti
+                    //navController.navigate(Screen.CaracterizacionDeIA.route)
                 }
             )
         }
