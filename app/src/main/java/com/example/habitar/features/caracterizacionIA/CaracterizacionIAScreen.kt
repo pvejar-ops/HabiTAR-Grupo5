@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.habitar.core.ui.componentes.AppButton
 
@@ -30,48 +31,45 @@ fun CaracterizacionIAScreen(
         }
     }
 
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFEEEEF8)) //
-            .imePadding()                  //
-    ){
-    // Column con scroll: Vital para que si agregas muchas preguntas, el usuario pueda bajar
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .verticalScroll(rememberScrollState())
-                .padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Top
-        ) {
+            .background(Color(0xFFEEEEF8))
+            .statusBarsPadding()
+            .verticalScroll(rememberScrollState())
+            .padding(24.dp)
+            .imePadding(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top
+    ) {
 
         // Título con estilo de cápsula
-        Text(
-            text = "Cuéntanos de ti",
-            style = MaterialTheme.typography.titleMedium,
-            color = Color.White,
-            fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center, // Centra el texto dentro de la cápsula
-            modifier = Modifier
-                .fillMaxWidth() // <--- Esto hace que se expanda hacia los lados
-                .padding(vertical = 8.dp)
-                .background(
-                    color = Color(0xFF6750A4),
-                    shape = CircleShape
-                )
-                .padding(vertical = 12.dp) // Padding arriba y abajo dentro de la morado
-        )
+            Text(
+                text = "Cuentanos de ti",
+                style = MaterialTheme.typography.titleLarge,
+                color = Color.White,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth() // El fondo rosa ocupa todo el ancho disponible.
+                    .background(
+                        color = Color(0xFF6750A4),
+                        shape = CircleShape
+                    )
+                    .padding(vertical = 12.dp) // Espaciado interno arriba y abajo del texto para darle aire.
+            )
 
-        Spacer(modifier = Modifier.height(24.dp))
 
-        Text(
-            text = "¿Qué te ayuda a autorregularte?",
-            style = MaterialTheme.typography.headlineSmall,
-            fontWeight = FontWeight.Bold
-        )
+        Spacer(modifier = Modifier.height(12.dp))
 
-        Spacer(modifier = Modifier.height(24.dp))
+            Text(
+                text = "¿Qué te ayuda a autorregularte?",
+                style = MaterialTheme.typography.headlineSmall,
+                fontSize = 19.sp,
+                fontWeight = FontWeight.Bold
+            )
+
+        Spacer(modifier = Modifier.height(8.dp))
 
         Text(
             text = "Sonidos",
@@ -81,7 +79,7 @@ fun CaracterizacionIAScreen(
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .fillMaxWidth() // <--- También se expande
-                .padding(horizontal = 16.dp, vertical = 8.dp) // Espacio extra a los lados si quieres que sea un pelín más corta que la de arriba
+                .padding(horizontal = 16.dp, vertical = 2.dp) // Espacio extra a los lados si quieres que sea un pelín más corta que la de arriba
                 .background(
                     color = Color(0xFF9291F3), // El color lila claro que usamos en los bloques
                     shape = CircleShape
@@ -99,7 +97,7 @@ fun CaracterizacionIAScreen(
             maxLines = 4   // Limita el crecimiento visual antes de hacer scroll interno
         )
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
         Text(
             text = "Recursos visuales",
@@ -109,7 +107,7 @@ fun CaracterizacionIAScreen(
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .fillMaxWidth() // <--- También se expande
-                .padding(horizontal = 16.dp, vertical = 8.dp) // Espacio extra a los lados si quieres que sea un pelín más corta que la de arriba
+                .padding(horizontal = 16.dp, vertical = 2.dp) // Espacio extra a los lados si quieres que sea un pelín más corta que la de arriba
                 .background(
                     color = Color(0xFF9291F3), // El color lila claro que usamos en los bloques
                     shape = CircleShape
@@ -127,7 +125,7 @@ fun CaracterizacionIAScreen(
             maxLines = 4   // Limita el crecimiento visual
         )
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
         Text(
             text = "Debilidades",
@@ -137,7 +135,7 @@ fun CaracterizacionIAScreen(
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .fillMaxWidth() // <--- También se expande
-                .padding(horizontal = 16.dp, vertical = 8.dp) // Espacio extra a los lados si quieres que sea un pelín más corta que la de arriba
+                .padding(horizontal = 16.dp, vertical = 2.dp) // Espacio extra a los lados si quieres que sea un pelín más corta que la de arriba
                 .background(
                     color = Color(0xFF9291F3), // El color lila claro que usamos en los bloques
                     shape = CircleShape
@@ -183,4 +181,4 @@ fun CaracterizacionIAScreen(
         }
     }
 }
-}
+
