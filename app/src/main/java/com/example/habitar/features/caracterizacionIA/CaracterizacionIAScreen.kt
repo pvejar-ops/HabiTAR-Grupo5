@@ -45,7 +45,7 @@ fun CaracterizacionIAScreen(
 
         // Título con estilo de cápsula
             Text(
-                text = "Cuentanos de ti",
+                text = "Cuéntanos de ti",
                 style = MaterialTheme.typography.titleLarge,
                 color = Color.White,
                 fontWeight = FontWeight.Bold,
@@ -79,7 +79,7 @@ fun CaracterizacionIAScreen(
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .fillMaxWidth() // <--- También se expande
-                .padding(horizontal = 16.dp, vertical = 2.dp) // Espacio extra a los lados si quieres que sea un pelín más corta que la de arriba
+                .padding(horizontal = 16.dp, vertical = 10.dp) // Espacio extra a los lados si quieres que sea un pelín más corta que la de arriba
                 .background(
                     color = Color(0xFF9291F3), // El color lila claro que usamos en los bloques
                     shape = CircleShape
@@ -107,7 +107,7 @@ fun CaracterizacionIAScreen(
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .fillMaxWidth() // <--- También se expande
-                .padding(horizontal = 16.dp, vertical = 2.dp) // Espacio extra a los lados si quieres que sea un pelín más corta que la de arriba
+                .padding(horizontal = 16.dp, vertical = 10.dp) // Espacio extra a los lados si quieres que sea un pelín más corta que la de arriba
                 .background(
                     color = Color(0xFF9291F3), // El color lila claro que usamos en los bloques
                     shape = CircleShape
@@ -135,7 +135,7 @@ fun CaracterizacionIAScreen(
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .fillMaxWidth() // <--- También se expande
-                .padding(horizontal = 16.dp, vertical = 2.dp) // Espacio extra a los lados si quieres que sea un pelín más corta que la de arriba
+                .padding(horizontal = 16.dp, vertical = 10.dp) // Espacio extra a los lados si quieres que sea un pelín más corta que la de arriba
                 .background(
                     color = Color(0xFF9291F3), // El color lila claro que usamos en los bloques
                     shape = CircleShape
