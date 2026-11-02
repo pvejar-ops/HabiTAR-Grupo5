@@ -13,3 +13,21 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Antigravity / Gemini cache
+.gemini/
+
+# Archivos temporales de trabajo
+temp_drive/
+pipeline_e2e.zip
+
+# Python / Backend
+backend/__pycache__/
+backend/*/__pycache__/
+backend/*/*/__pycache__/
+backend/*/*/*/__pycache__/
+backend/.env
+backend/.venv/
+backend/venv/
+*.py[cod]
+*$py.class

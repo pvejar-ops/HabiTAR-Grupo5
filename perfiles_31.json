@@ -1,0 +1,531 @@
+[
+ {
+  "id_usuario": "USR-001",
+  "nombre_ficticio": "Matías Rojas",
+  "arquetipo": "El Creativo Sensorial",
+  "condicion": "TEA nivel 1 de apoyo",
+  "necesidades_ux": [
+   "Control de sonido y ajustes visuales",
+   "Anticipación y señalética",
+   "Interfaz simple",
+   "Repetición y feedback"
+  ],
+  "estresores": [
+   "Sonidos inesperados",
+   "Estímulos simultáneos",
+   "Interfaces saturadas",
+   "Cambios de última hora"
+  ],
+  "implicacion_habitar": "control sensorial, anticipación, interfaz simple, autonomía, repetición, feedback"
+ },
+ {
+  "id_usuario": "USR-002",
+  "nombre_ficticio": "Valentina Torres",
+  "arquetipo": "La Observadora Detallista",
+  "condicion": "TEA nivel 1 de apoyo",
+  "necesidades_ux": [
+   "Vista previa y anticipación",
+   "Jerarquía visual",
+   "Pausar y retomar"
+  ],
+  "estresores": [
+   "Cambios sin aviso",
+   "Pantallas parpadeantes",
+   "Presión para responder rápido"
+  ],
+  "implicacion_habitar": "anticipación, jerarquía visual, control de ritmo, feedback"
+ },
+ {
+  "id_usuario": "USR-003",
+  "nombre_ficticio": "Benjamín Silva",
+  "arquetipo": "El Explorador Curioso",
+  "condicion": "TDAH",
+  "necesidades_ux": [
+   "Microtareas",
+   "Indicadores de avance",
+   "Interacción directa"
+  ],
+  "estresores": [
+   "Esperas largas",
+   "Texto excesivo",
+   "Tareas repetitivas sin propósito"
+  ],
+  "implicacion_habitar": "microtareas, progreso visible, feedback inmediato, exploración"
+ },
+ {
+  "id_usuario": "USR-004",
+  "nombre_ficticio": "Camila Reyes",
+  "arquetipo": "La Organizadora Visual",
+  "condicion": "Neurotípica",
+  "necesidades_ux": [
+   "Agenda visual",
+   "Prioridades",
+   "Recordatorios configurables"
+  ],
+  "estresores": [
+   "Información dispersa",
+   "Cambios de última hora",
+   "No saber qué es prioritario"
+  ],
+  "implicacion_habitar": "agenda visual, prioridades, recordatorios, síntesis"
+ },
+ {
+  "id_usuario": "USR-005",
+  "nombre_ficticio": "Diego Morales",
+  "arquetipo": "El Analítico",
+  "condicion": "Neurotípico",
+  "necesidades_ux": [
+   "Criterios claros",
+   "Comparación de opciones",
+   "Historial"
+  ],
+  "estresores": [
+   "Criterios ambiguos",
+   "Feedback genérico",
+   "Cambios sin explicación"
+  ],
+  "implicacion_habitar": "criterios claros, comparación, historial, feedback específico"
+ },
+ {
+  "id_usuario": "USR-006",
+  "nombre_ficticio": "Sofía Núñez",
+  "arquetipo": "La Expresiva",
+  "condicion": "TDAH",
+  "necesidades_ux": [
+   "Personalización",
+   "Bitácora emocional",
+   "Guardado automático"
+  ],
+  "estresores": [
+   "Mensajes rígidos",
+   "Interrupciones frecuentes",
+   "Sentir que perdió el progreso"
+  ],
+  "implicacion_habitar": "personalización, bitácora, guardado, recordatorios amables"
+ },
+ {
+  "id_usuario": "USR-007",
+  "nombre_ficticio": "Tomás Herrera",
+  "arquetipo": "El Social Estratega",
+  "condicion": "Neurotípico",
+  "necesidades_ux": [
+   "Red de apoyo",
+   "Opciones de contacto",
+   "Privacidad"
+  ],
+  "estresores": [
+   "No recibir respuesta",
+   "Roles poco claros",
+   "Interacciones forzadas"
+  ],
+  "implicacion_habitar": "red de apoyo, privacidad, canales claros, colaboración"
+ },
+ {
+  "id_usuario": "USR-008",
+  "nombre_ficticio": "Isidora Paredes",
+  "arquetipo": "La Reflexiva",
+  "condicion": "TEA nivel 1 de apoyo",
+  "necesidades_ux": [
+   "Modo silencioso",
+   "Respuesta diferida",
+   "Pausas"
+  ],
+  "estresores": [
+   "Participación improvisada",
+   "Ruido de varias voces",
+   "Temporizadores agresivos"
+  ],
+  "implicacion_habitar": "modo silencioso, pausa, respuesta diferida, anticipación"
+ },
+ {
+  "id_usuario": "USR-009",
+  "nombre_ficticio": "Lucas Fernández",
+  "arquetipo": "El Pragmático",
+  "condicion": "Neurotípico",
+  "necesidades_ux": [
+   "Acceso rápido",
+   "Atajos",
+   "Ayuda contextual"
+  ],
+  "estresores": [
+   "Funciones redundantes",
+   "Tutoriales extensos",
+   "Demasiadas confirmaciones"
+  ],
+  "implicacion_habitar": "acceso rápido, atajos, utilidad, ayuda contextual"
+ },
+ {
+  "id_usuario": "USR-010",
+  "nombre_ficticio": "Antonia Salazar",
+  "arquetipo": "La Empática",
+  "condicion": "Neurotípica",
+  "necesidades_ux": [
+   "Lenguaje empático",
+   "Red de contacto",
+   "Privacidad emocional"
+  ],
+  "estresores": [
+   "Lenguaje frío",
+   "Mensajes de culpa",
+   "Exposición emocional no deseada"
+  ],
+  "implicacion_habitar": "lenguaje empático, privacidad, red de apoyo, pausas"
+ },
+ {
+  "id_usuario": "USR-011",
+  "nombre_ficticio": "Gabriel Muñoz",
+  "arquetipo": "El Perfeccionista",
+  "condicion": "TEA nivel 1 de apoyo",
+  "necesidades_ux": [
+   "Criterios de finalización",
+   "Versionado",
+   "Feedback preciso"
+  ],
+  "estresores": [
+   "Errores del sistema",
+   "Feedback contradictorio",
+   "No saber cuándo terminar"
+  ],
+  "implicacion_habitar": "criterios de cierre, versionado, precisión, feedback"
+ },
+ {
+  "id_usuario": "USR-012",
+  "nombre_ficticio": "Martina Vidal",
+  "arquetipo": "La Autónoma",
+  "condicion": "TDAH",
+  "necesidades_ux": [
+   "Configuración flexible",
+   "Hitos",
+   "Recordatorios opcionales"
+  ],
+  "estresores": [
+   "Microgestión",
+   "Bloqueos innecesarios",
+   "Recordatorios insistentes"
+  ],
+  "implicacion_habitar": "autonomía, hitos, configuración, recordatorios opcionales"
+ },
+ {
+  "id_usuario": "USR-013",
+  "nombre_ficticio": "Nicolás Campos",
+  "arquetipo": "El Práctico",
+  "condicion": "Neurotípico",
+  "necesidades_ux": [
+   "Deshacer",
+   "Ayuda contextual",
+   "Tutorial opcional"
+  ],
+  "estresores": [
+   "Tutorial obligatorio",
+   "Mensajes largos",
+   "No poder corregir"
+  ],
+  "implicacion_habitar": "deshacer, práctica, ayuda contextual, tutorial opcional"
+ },
+ {
+  "id_usuario": "USR-014",
+  "nombre_ficticio": "Emilia Duarte",
+  "arquetipo": "La Imaginativa",
+  "condicion": "TEA nivel 1 de apoyo",
+  "necesidades_ux": [
+   "Guardado automático",
+   "Transiciones",
+   "Control sensorial"
+  ],
+  "estresores": [
+   "Interrupciones inesperadas",
+   "Cambios bruscos",
+   "Perder una idea"
+  ],
+  "implicacion_habitar": "guardado, transiciones, control sensorial, personalización"
+ },
+ {
+  "id_usuario": "USR-015",
+  "nombre_ficticio": "Joaquín Rivas",
+  "arquetipo": "El Dinámico",
+  "condicion": "TDAH",
+  "necesidades_ux": [
+   "Sprints",
+   "Temporizador opcional",
+   "Progreso visual"
+  ],
+  "estresores": [
+   "Lecturas largas",
+   "Esperas",
+   "Tareas sin interacción"
+  ],
+  "implicacion_habitar": "sprints, progreso, ritmo dinámico, temporizador opcional"
+ },
+ {
+  "id_usuario": "USR-016",
+  "nombre_ficticio": "Renata Flores",
+  "arquetipo": "La Exploradora",
+  "condicion": "Neurotípica",
+  "necesidades_ux": [
+   "Mapa",
+   "Favoritos",
+   "Historial de recorrido"
+  ],
+  "estresores": [
+   "Callejones sin salida",
+   "No saber dónde está",
+   "Perder contenido guardado"
+  ],
+  "implicacion_habitar": "mapa, favoritos, historial, exploración libre"
+ },
+ {
+  "id_usuario": "USR-017",
+  "nombre_ficticio": "Sofía Contreras",
+  "arquetipo": "La Observadora Visual",
+  "condicion": "TEA nivel 1 de apoyo",
+  "necesidades_ux": [
+   "Jerarquía visual clara",
+   "Vista previa de actividades",
+   "Opciones para reducir estímulos"
+  ],
+  "estresores": [
+   "Cambios sin aviso",
+   "Pantallas con exceso de elementos",
+   "Instrucciones demasiado abiertas"
+  ],
+  "implicacion_habitar": "estructura visual, anticipación, jerarquía, control de estímulos, autonomía"
+ },
+ {
+  "id_usuario": "USR-018",
+  "nombre_ficticio": "Tomás Herrera",
+  "arquetipo": "El Explorador Hiperfocal",
+  "condicion": "TDAH",
+  "necesidades_ux": [
+   "Microtareas",
+   "Barra de progreso",
+   "Pausas y reingreso fácil"
+  ],
+  "estresores": [
+   "Tareas largas sin hitos",
+   "Esperas pasivas",
+   "Demasiadas instrucciones simultáneas"
+  ],
+  "implicacion_habitar": "microtareas, progreso visible, autonomía, feedback inmediato, reingreso"
+ },
+ {
+  "id_usuario": "USR-019",
+  "nombre_ficticio": "Isidora Vega",
+  "arquetipo": "La Planificadora Tranquila",
+  "condicion": "TEA nivel 1 de apoyo",
+  "necesidades_ux": [
+   "Calendario y recordatorios",
+   "Instrucciones paso a paso",
+   "Modo silencioso"
+  ],
+  "estresores": [
+   "Cambios de última hora",
+   "Interrupciones",
+   "Presión por responder rápido"
+  ],
+  "implicacion_habitar": "predictibilidad, secuencias, avisos previos, modo silencioso, pausas"
+ },
+ {
+  "id_usuario": "USR-020",
+  "nombre_ficticio": "Gabriel Muñoz",
+  "arquetipo": "El Constructor de Sentido",
+  "condicion": "Neurotípico alta carga académica",
+  "necesidades_ux": [
+   "Resumen inicial",
+   "Indicadores de avance",
+   "Acceso rápido a recursos"
+  ],
+  "estresores": [
+   "Tareas sin sentido aparente",
+   "Sobrecarga de entregas",
+   "Información redundante"
+  ],
+  "implicacion_habitar": "propósito, jerarquía, eficiencia, aplicación, feedback"
+ },
+ {
+  "id_usuario": "USR-021",
+  "nombre_ficticio": "Martina Vidal",
+  "arquetipo": "La Reguladora Sensorial",
+  "condicion": "TEA nivel 1 de apoyo",
+  "necesidades_ux": [
+   "Control de volumen y brillo",
+   "Pausa inmediata",
+   "Advertencias sensoriales"
+  ],
+  "estresores": [
+   "Sonidos inesperados",
+   "Animaciones automáticas",
+   "Exceso de estímulos simultáneos"
+  ],
+  "implicacion_habitar": "control sensorial, pausa, advertencias, personalización, continuidad"
+ },
+ {
+  "id_usuario": "USR-022",
+  "nombre_ficticio": "Lucas Fernández",
+  "arquetipo": "El Navegante Espacial",
+  "condicion": "TEA nivel 1 de apoyo",
+  "necesidades_ux": [
+   "Mapa opcional",
+   "Señalética consistente",
+   "Botón volver"
+  ],
+  "estresores": [
+   "Cambios de navegación",
+   "Espacios sin referencias",
+   "Teletransportes inesperados"
+  ],
+  "implicacion_habitar": "orientación, señalética, mapa, retorno, exploración repetible"
+ },
+ {
+  "id_usuario": "USR-023",
+  "nombre_ficticio": "Antonia Salazar",
+  "arquetipo": "La Conectora Emocional",
+  "condicion": "Neurotípica sensibilidad emocional alta",
+  "necesidades_ux": [
+   "Tono amable",
+   "Feedback descriptivo",
+   "Opciones de colaboración"
+  ],
+  "estresores": [
+   "Crítica ambigua",
+   "Comparación pública",
+   "Ambientes tensos"
+  ],
+  "implicacion_habitar": "seguridad emocional, feedback, criterios claros, colaboración, tono"
+ },
+ {
+  "id_usuario": "USR-024",
+  "nombre_ficticio": "Nicolás Soto",
+  "arquetipo": "El Pensador Profundo",
+  "condicion": "TEA nivel 1 de apoyo",
+  "necesidades_ux": [
+   "Guardar y continuar",
+   "Historial",
+   "Lectura sin límite de tiempo"
+  ],
+  "estresores": [
+   "Preguntas improvisadas",
+   "Presión temporal",
+   "Multitarea"
+  ],
+  "implicacion_habitar": "tiempo de procesamiento, guardar, continuidad, baja presión, profundidad"
+ },
+ {
+  "id_usuario": "USR-025",
+  "nombre_ficticio": "Fernanda Ríos",
+  "arquetipo": "La Aprendiz Multimodal",
+  "condicion": "TDAH",
+  "necesidades_ux": [
+   "Audio opcional",
+   "Visuales y microvideos",
+   "Interacción breve"
+  ],
+  "estresores": [
+   "Clases pasivas extensas",
+   "Texto continuo",
+   "Repetición sin propósito"
+  ],
+  "implicacion_habitar": "multimodalidad, elección, interacción, variedad controlada, feedback"
+ },
+ {
+  "id_usuario": "USR-026",
+  "nombre_ficticio": "Javiera Campos",
+  "arquetipo": "La Buscadora de Calma",
+  "condicion": "TEA nivel 1 de apoyo",
+  "necesidades_ux": [
+   "Checklist",
+   "Confirmación de acciones",
+   "Repetición libre"
+  ],
+  "estresores": [
+   "No saber si lo hizo bien",
+   "Cambios inesperados",
+   "Ambigüedad"
+  ],
+  "implicacion_habitar": "repetición, confirmación, claridad, recuperación, control"
+ },
+ {
+  "id_usuario": "USR-027",
+  "nombre_ficticio": "Benjamín Araya",
+  "arquetipo": "El Experimentador Autónomo",
+  "condicion": "Neurotípico",
+  "necesidades_ux": [
+   "Saltar tutorial",
+   "Ayuda contextual",
+   "Atajos"
+  ],
+  "estresores": [
+   "Tutoriales obligatorios",
+   "Bloqueos artificiales",
+   "Exceso de confirmaciones"
+  ],
+  "implicacion_habitar": "autonomía, exploración, ayuda contextual, atajos, feedback"
+ },
+ {
+  "id_usuario": "USR-028",
+  "nombre_ficticio": "Constanza Leiva",
+  "arquetipo": "La Organizadora Visual",
+  "condicion": "TDAH",
+  "necesidades_ux": [
+   "Dashboard simple",
+   "Prioridad destacada",
+   "Recordatorios configurables"
+  ],
+  "estresores": [
+   "Información en distintos lugares",
+   "Demasiadas pestañas",
+   "Olvidar entregas"
+  ],
+  "implicacion_habitar": "dashboard, prioridades, progreso, recordatorios, jerarquía"
+ },
+ {
+  "id_usuario": "USR-029",
+  "nombre_ficticio": "Sebastián Paredes",
+  "arquetipo": "El Aprendiz de Rutinas",
+  "condicion": "TEA nivel 1 de apoyo",
+  "necesidades_ux": [
+   "Preferencias persistentes",
+   "Plantillas",
+   "Navegación consistente"
+  ],
+  "estresores": [
+   "Rediseños repentinos",
+   "Cambios de comandos",
+   "Procesos inconsistentes"
+  ],
+  "implicacion_habitar": "consistencia, rutinas, preferencias guardadas, repetición, gradualidad"
+ },
+ {
+  "id_usuario": "USR-030",
+  "nombre_ficticio": "Emilia Navarro",
+  "arquetipo": "La Intérprete Social",
+  "condicion": "TEA nivel 1 de apoyo",
+  "necesidades_ux": [
+   "Lenguaje directo",
+   "Opciones de comunicación",
+   "Criterios visibles"
+  ],
+  "estresores": [
+   "Ironías ambiguas",
+   "Instrucciones implícitas",
+   "Participación forzada"
+  ],
+  "implicacion_habitar": "lenguaje claro, participación flexible, criterios, preparación, respeto"
+ },
+ {
+  "id_usuario": "USR-031",
+  "nombre_ficticio": "Renato Silva",
+  "arquetipo": "El Regulador del Ritmo",
+  "condicion": "TDAH",
+  "necesidades_ux": [
+   "Sesiones breves",
+   "Pausa/reanudar",
+   "Progreso por bloques"
+  ],
+  "estresores": [
+   "Sesiones largas",
+   "No poder detenerse",
+   "Exceso de tareas abiertas"
+  ],
+  "implicacion_habitar": "ritmo flexible, pausa/reanudar, bloques, progreso, activación"
+ }
+]
