@@ -1,0 +1,11 @@
+doc_id,archivo,titulo,tipo,origen,licencia,estado,indexar,notas
+doc01_screening_vs_diagnostico,doc01_screening_vs_diagnostico.md,Tamizaje frente a diagnóstico,concepto,propio,n/a,borrador_validar_con_asesora,si,
+doc02_politica_no_diagnostico,doc02_politica_no_diagnostico.md,Política de no-diagnóstico y derivación,politica,propio,n/a,borrador_validar_con_asesora_y_empresa,si,Completar recursos locales verificados
+doc03_alcance_modulo,doc03_alcance_modulo.md,Alcance del módulo,contexto_proyecto,propio,n/a,listo,si,
+doc04_camuflaje_concepto,doc04_camuflaje_concepto.md,Qué es el camuflaje social,concepto,Hull et al. 2019,CC BY 4.0,listo,si,Atribución obligatoria
+doc05_ficha_catq,doc05_ficha_catq.md,Ficha CAT-Q,ficha_instrumento,Hull et al. 2019,CC BY 4.0,listo (sin ítems ni cortes),si,Versión en español pendiente; ≥100 sin fuente
+doc06_conductas_repetitivas_concepto,doc06_conductas_repetitivas_concepto.md,Conductas restringidas y repetitivas,concepto,Barrett et al. 2015,CC BY 4.0,listo,si,Atribución obligatoria
+doc07_ficha_rbq2a,doc07_ficha_rbq2a.md,Ficha RBQ-2A,ficha_instrumento,Barrett et al. 2015,CC BY 4.0,listo (sin ítems ni cortes),si,Versión en español pendiente
+doc08_ficha_srs2,doc08_ficha_srs2.md,Descripción general SRS-2,ficha_instrumento_descriptiva,Constantino & Gruber 2012 / distribuidores,comercial (WPS),listo (solo descripción),si,Nivel B (no C); no implementar
+doc09_faq_usuario,doc09_faq_usuario.md,Preguntas frecuentes,faq,propio,n/a,borrador_validar_con_asesora,si,Completar privacidad y recursos
+doc11_contexto_habitar_direxlab,doc11_contexto_habitar_direxlab.md,Contexto HabiTAR y DIREXLab,contexto_proyecto,Deck Perfiles de usuario (Observatorio UX UTEM),propio del proyecto,confirmar relación HabiTAR-DIREXLab,si,
