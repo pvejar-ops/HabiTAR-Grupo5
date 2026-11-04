@@ -20,6 +20,7 @@ local.properties
 # Archivos temporales de trabajo
 temp_drive/
 pipeline_e2e.zip
+presentacion_avance_3*.pptx
 
 # Python / Backend
 backend/__pycache__/
