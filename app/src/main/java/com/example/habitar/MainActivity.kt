@@ -54,7 +54,7 @@ import kotlinx.coroutines.runBlocking
 class MainActivity : ComponentActivity() {
 
     var tokenRestablecimiento: String? = null
-    var usuarioLogueado: Boolean = false
+    var usuarioLogueado: Boolean = true
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
