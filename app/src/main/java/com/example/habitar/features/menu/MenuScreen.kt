@@ -32,14 +32,96 @@ fun MenuScreen(
             .fillMaxSize()
             .statusBarsPadding()
             .verticalScroll(rememberScrollState())
-            .padding(top = 24.dp, start = 20.dp, end = 20.dp, bottom = 24.dp),
+            .padding(top = 24.dp, start = 20.dp, end = 20.dp, bottom = 28.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // --- TARJETA PRINCIPAL DESTACADA: AUTOCONOCIMIENTO (S01) ---
-        Card(
+        // --- 1. TÍTULO TIPO CÁPSULA: MÓDULOS DE AUTORREGULACIÓN ---
+        Text(
+            text = "Módulos de autorregulación",
+            color = Color.White,
+            fontWeight = FontWeight.Bold,
+            fontSize = 18.sp,
+            modifier = Modifier
+                .fillMaxWidth(0.9f)
+                .background(color = Color(0xFF6750A4), shape = CircleShape)
+                .padding(vertical = 10.dp),
+            textAlign = TextAlign.Center
+        )
+
+        Text(
+            text = "Selecciona el módulo que se adapte a lo que necesitas",
+            style = MaterialTheme.typography.bodyMedium,
+            fontSize = 14.sp,
+            color = Color.Gray,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 20.dp),
+                .padding(vertical = 8.dp),
+            textAlign = TextAlign.Center
+        )
+
+        Spacer(modifier = Modifier.height(14.dp))
+
+        // --- 2. BLOQUES DE NAVEGACIÓN ORIGINALES ---
+        AppButton(
+            text = "Emociones",
+            onClick = onNavigateToEmociones,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(84.dp),
+            shape = RoundedCornerShape(16.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFFD671F5)
+            )
+        )
+
+        Spacer(modifier = Modifier.height(14.dp))
+
+        AppButton(
+            text = "Sensaciones Físicas",
+            onClick = onNavigateToSensaciones,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(84.dp),
+            shape = RoundedCornerShape(16.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFF9291F3)
+            )
+        )
+
+        Spacer(modifier = Modifier.height(14.dp))
+
+        AppButton(
+            text = "Meditación",
+            onClick = onNavigateToMeditacion,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(84.dp),
+            shape = RoundedCornerShape(16.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFF5ED9B9)
+            )
+        )
+
+        Spacer(modifier = Modifier.height(14.dp))
+
+        AppButton(
+            text = "Emergencia",
+            onClick = onNavigateToEmergencia,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(84.dp),
+            shape = RoundedCornerShape(16.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFFFFA085)
+            )
+        )
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        // --- 3. MÓDULO DE AUTOCONOCIMIENTO (S01 - DEBAJO DE EMERGENCIA) ---
+        Card(
+            modifier = Modifier
+                .fillMaxWidth(),
             shape = RoundedCornerShape(22.dp),
             colors = CardDefaults.cardColors(containerColor = Color.White),
             border = BorderStroke(2.dp, Color(0xFF5E72E4)), // Borde morado corporativo
@@ -96,86 +178,5 @@ fun MenuScreen(
                 }
             }
         }
-
-        // --- TÍTULO TIPO CÁPSULA: MÓDULOS DE AUTORREGULACIÓN ---
-        Text(
-            text = "Módulos de autorregulación",
-            color = Color.White,
-            fontWeight = FontWeight.Bold,
-            fontSize = 18.sp,
-            modifier = Modifier
-                .fillMaxWidth(0.9f)
-                .background(color = Color(0xFF6750A4), shape = CircleShape)
-                .padding(vertical = 10.dp),
-            textAlign = TextAlign.Center
-        )
-
-        Text(
-            text = "Selecciona el módulo que se adapte a lo que necesitas",
-            style = MaterialTheme.typography.bodyMedium,
-            fontSize = 14.sp,
-            color = Color.Gray,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            textAlign = TextAlign.Center
-        )
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        // --- BLOQUES DE NAVEGACIÓN ORIGINALES ---
-        AppButton(
-            text = "Emociones",
-            onClick = onNavigateToEmociones,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(84.dp),
-            shape = RoundedCornerShape(16.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFFD671F5)
-            )
-        )
-
-        Spacer(modifier = Modifier.height(14.dp))
-
-        AppButton(
-            text = "Sensaciones Físicas",
-            onClick = onNavigateToSensaciones,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(84.dp),
-            shape = RoundedCornerShape(16.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF9291F3)
-            )
-        )
-
-        Spacer(modifier = Modifier.height(14.dp))
-
-        AppButton(
-            text = "Meditación",
-            onClick = onNavigateToMeditacion,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(84.dp),
-            shape = RoundedCornerShape(16.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF5ED9B9)
-            )
-        )
-
-        Spacer(modifier = Modifier.height(14.dp))
-
-        AppButton(
-            text = "Emergencia",
-            onClick = onNavigateToEmergencia,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(84.dp),
-            shape = RoundedCornerShape(16.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFFFFA085)
-            )
-        )
     }
 }

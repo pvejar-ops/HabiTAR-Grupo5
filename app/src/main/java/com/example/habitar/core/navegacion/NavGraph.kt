@@ -439,8 +439,12 @@ fun AppNavGraph(
                 rawPregunta
             }
 
+            // Perfil psicométrico real calculado para este usuario
+            val perfil = autoconocimientoViewModel.perfilResultado ?: autoconocimientoViewModel.calcularPerfilReal()
+
             RespuestaOrientativaScreen(
                 textoPregunta = textoPregunta,
+                perfil = perfil,
                 onVolverClick = { navController.popBackStack() },
                 onIrAMeditacionClick = { navController.navigate(Screen.Meditacion.route) },
                 onVerOtrosTemasClick = { navController.popBackStack() }

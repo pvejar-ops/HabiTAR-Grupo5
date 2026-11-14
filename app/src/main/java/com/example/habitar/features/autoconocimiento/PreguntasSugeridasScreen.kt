@@ -142,9 +142,10 @@ fun PreguntasSugeridasScreen(
             )
             Spacer(modifier = Modifier.height(10.dp))
 
+            // Ahora sin destacado, uniforme con las demás
             ChipPregunta(
                 texto = "¿Qué hacer cuando me siento sobrecargado/a?",
-                destacado = true,
+                destacado = false,
                 onClick = { onSeleccionarPregunta("energia_1", "¿Qué hacer cuando me siento sobrecargado/a?") }
             )
             Spacer(modifier = Modifier.height(10.dp))
