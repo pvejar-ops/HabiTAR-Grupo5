@@ -3,6 +3,7 @@ package com.example.habitar.features.autoconocimiento
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
@@ -15,6 +16,7 @@ import com.example.habitar.data.ScreeningApiService
 import com.example.habitar.data.ScreeningRequest
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
 
 // Modelos del perfil dinámico de resultados
 data class SubescalaResultado(
@@ -233,10 +235,12 @@ class AutoconocimientoViewModel(application: Application) : AndroidViewModel(app
 
     fun procesarResultadosConBackend(onCompletado: () -> Unit) {
         viewModelScope.launch {
-            // Calculamos el perfil real de inmediato
+            // 1. Calculamos de inmediato el perfil local determinista para asegurar datos siempre
             perfilResultado = calcularPerfilReal()
 
             try {
+                Log.d("HabiTAR_Backend", "Iniciando sincronización con backend en Render...")
+
                 val catqMap = respuestasCatq.mapKeys { it.key.toString() }
                 val rbq2aMap = respuestasRbq2a.mapKeys { it.key.toString() }
 
@@ -246,9 +250,15 @@ class AutoconocimientoViewModel(application: Application) : AndroidViewModel(app
                     rbq2a = if (rbq2aMap.isNotEmpty()) RespuestasRbq2a(rbq2aMap) else null
                 )
 
-                ScreeningApiService.procesarScreening(request)
-            } catch (_: Exception) {
-                delay(1500)
+                // Timeout de seguridad: Si Render tarda más de 25 segundos (cold start severo), saltamos con el perfil local
+                withTimeoutOrNull(25000L) {
+                    ScreeningApiService.procesarScreening(request)
+                }
+
+                Log.d("HabiTAR_Backend", "Screening procesado exitosamente con el backend.")
+            } catch (e: Exception) {
+                Log.w("HabiTAR_Backend", "Servidor Render en espera o sin conexión: utilizando cálculo local resiliente (${e.message})")
+                delay(1200)
             } finally {
                 onCompletado()
             }

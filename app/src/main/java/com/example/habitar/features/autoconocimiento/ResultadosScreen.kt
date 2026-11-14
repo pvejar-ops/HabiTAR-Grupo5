@@ -1,7 +1,9 @@
 package com.example.habitar.features.autoconocimiento
 
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -9,11 +11,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -33,9 +36,12 @@ fun ResultadosScreen(
     viewModel: AutoconocimientoViewModel,
     onVolverClick: () -> Unit,
     onInformePdfClick: () -> Unit,
-    onExplorarClick: () -> Unit
+    onExplorarClick: () -> Unit,
+    onReiniciarCuestionarioClick: () -> Unit = {}
 ) {
-    // Obtenemos el perfil dinámico calculado en tiempo real
+    val context = LocalContext.current
+    var mostrarDialogoReiniciar by remember { mutableStateOf(false) }
+
     val perfil = viewModel.perfilResultado ?: viewModel.calcularPerfilReal()
 
     Scaffold(
@@ -177,7 +183,6 @@ fun ResultadosScreen(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    // Subescala 1: Compensación (DINÁMICA)
                     ItemSubescala(
                         titulo = perfil.esfuerzoSocial.titulo,
                         nivelTexto = perfil.esfuerzoSocial.nivelTexto,
@@ -188,7 +193,6 @@ fun ResultadosScreen(
 
                     Spacer(modifier = Modifier.height(20.dp))
 
-                    // Subescala 2: Enmascaramiento (DINÁMICA)
                     ItemSubescala(
                         titulo = perfil.cuidarMuestras.titulo,
                         nivelTexto = perfil.cuidarMuestras.nivelTexto,
@@ -218,7 +222,6 @@ fun ResultadosScreen(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    // Subescala 1: Rutinas / Insistencia (DINÁMICA)
                     ItemSubescala(
                         titulo = perfil.preferenciaPredecible.titulo,
                         nivelTexto = perfil.preferenciaPredecible.nivelTexto,
@@ -229,7 +232,6 @@ fun ResultadosScreen(
 
                     Spacer(modifier = Modifier.height(20.dp))
 
-                    // Subescala 2: Motor repetitivo (DINÁMICA)
                     ItemSubescala(
                         titulo = perfil.movimientosRepetidos.titulo,
                         nivelTexto = perfil.movimientosRepetidos.nivelTexto,
@@ -240,7 +242,59 @@ fun ResultadosScreen(
                 }
             }
 
+            Spacer(modifier = Modifier.height(20.dp))
+
+            // Botón: Volver a hacer el cuestionario (Borrar respuestas)
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "Volver a realizar el cuestionario (Borrar respuestas)",
+                    color = Color(0xFFE53935),
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(8.dp))
+                        .clickable { mostrarDialogoReiniciar = true }
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                )
+            }
+
             Spacer(modifier = Modifier.height(24.dp))
+        }
+
+        // Diálogo ético de confirmación
+        if (mostrarDialogoReiniciar) {
+            AlertDialog(
+                onDismissRequest = { mostrarDialogoReiniciar = false },
+                title = { Text(text = "¿Reiniciar y comenzar de cero?", fontWeight = FontWeight.Bold) },
+                text = {
+                    Text(
+                        text = "Se borrarán tus respuestas anteriores de la memoria del teléfono para que puedas realizar nuevamente el cuestionario.",
+                        fontSize = 14.sp,
+                        color = TextoNegro
+                    )
+                },
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            viewModel.reiniciarProgreso()
+                            mostrarDialogoReiniciar = false
+                            Toast.makeText(context, "Respuestas eliminadas. Empezando de nuevo.", Toast.LENGTH_SHORT).show()
+                            onReiniciarCuestionarioClick()
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE53935))
+                    ) {
+                        Text(text = "Sí, reiniciar", color = Color.White)
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { mostrarDialogoReiniciar = false }) {
+                        Text(text = "Cancelar", color = Color(0xFF6B7280))
+                    }
+                }
+            )
         }
     }
 }

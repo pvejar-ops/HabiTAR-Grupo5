@@ -12,6 +12,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -29,6 +30,7 @@ private val GrisBordeChip = Color(0xFFDCDCE5)
 @Composable
 fun PreguntasSugeridasScreen(
     onVolverClick: () -> Unit,
+    onVolverAlMenuClick: () -> Unit = onVolverClick,
     onSeleccionarPregunta: (idPregunta: String, textoPregunta: String) -> Unit
 ) {
     Scaffold(
@@ -77,7 +79,6 @@ fun PreguntasSugeridasScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // Texto explicativo
             Text(
                 text = "Elige un tema y te daremos ideas basadas en tus respuestas y en información confiable.",
                 fontSize = 15.sp,
@@ -159,9 +160,27 @@ fun PreguntasSugeridasScreen(
                 onClick = { onSeleccionarPregunta("energia_3", "¿Qué estímulos podrían estar afectándome?") }
             )
 
-            Spacer(modifier = Modifier.height(36.dp))
+            Spacer(modifier = Modifier.height(28.dp))
 
-            // Nota al pie
+            // Botón para volver directamente al menú
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "Volver al menú principal",
+                    color = MoradoPrimario,
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(8.dp))
+                        .clickable { onVolverAlMenuClick() }
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
             Text(
                 text = "No es un chat abierto: solo puedes elegir entre estos temas.",
                 fontSize = 13.sp,
