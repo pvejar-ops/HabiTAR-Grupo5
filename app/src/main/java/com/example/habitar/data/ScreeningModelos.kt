@@ -45,3 +45,17 @@ data class ScreeningResponse(
     val rbq2a_result: Rbq2aResult? = null,
     val disclaimer: String = ""
 )
+
+// --- MODELO DE PERSISTENCIA EN SUPABASE ---
+@Serializable
+data class ScreeningResultadoSupabase(
+    val id_usuario: String,
+    val catq_total: Int,
+    val catq_compensacion: Int,
+    val catq_enmascaramiento: Int,
+    val catq_asimilacion: Int,
+    val rbq2a_media: Double,
+    val rbq2a_motor: Double,
+    val rbq2a_rutinas: Double,
+    val resumen_orientacion: String
+)

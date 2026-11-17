@@ -10,10 +10,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.habitar.core.SupabaseConfig
 import com.example.habitar.data.RespuestasCatq
 import com.example.habitar.data.RespuestasRbq2a
 import com.example.habitar.data.ScreeningApiService
 import com.example.habitar.data.ScreeningRequest
+import com.example.habitar.data.ScreeningResponse
+import com.example.habitar.data.ScreeningResultadoSupabase
+import io.github.jan.supabase.gotrue.auth
+import io.github.jan.supabase.postgrest.from
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
@@ -251,17 +256,83 @@ class AutoconocimientoViewModel(application: Application) : AndroidViewModel(app
                 )
 
                 // Timeout de seguridad: Si Render tarda más de 25 segundos (cold start severo), saltamos con el perfil local
-                withTimeoutOrNull(25000L) {
+                val responseBackend = withTimeoutOrNull(25000L) {
                     ScreeningApiService.procesarScreening(request)
                 }
 
                 Log.d("HabiTAR_Backend", "Screening procesado exitosamente con el backend.")
+
+                // Sincronización en Supabase si el usuario tiene sesión activa
+                guardarEnSupabaseSiDisponible(responseBackend)
             } catch (e: Exception) {
                 Log.w("HabiTAR_Backend", "Servidor Render en espera o sin conexión: utilizando cálculo local resiliente (${e.message})")
+                // Intentar guardar localmente en Supabase de todas formas
+                guardarEnSupabaseSiDisponible(null)
                 delay(1200)
             } finally {
                 onCompletado()
             }
+        }
+    }
+
+    private suspend fun guardarEnSupabaseSiDisponible(responseBackend: ScreeningResponse?) {
+        try {
+            val userId = SupabaseConfig.client.auth.currentUserOrNull()?.id
+            if (userId != null) {
+                val catqTotal = responseBackend?.catq_result?.total_score ?: calcularCatqTotalLocal()
+                val catqComp = responseBackend?.catq_result?.compensation_score ?: calcularCatqSubescalaLocal(listOf(1, 4, 5, 6, 11, 14, 15, 18, 20))
+                val catqMasc = responseBackend?.catq_result?.masking_score ?: calcularCatqSubescalaLocal(listOf(2, 7, 8, 9, 10, 13, 17, 25))
+                val catqAsim = responseBackend?.catq_result?.assimilation_score ?: calcularCatqSubescalaLocal(listOf(3, 12, 16, 19, 21, 22, 23, 24))
+
+                val itemsRutinas = listOf(1, 4, 6, 7, 9, 10, 11, 13, 14, 15, 17, 19)
+                val itemsMotor = listOf(2, 3, 5, 8, 12, 16, 18, 20)
+
+                val rbqRut = responseBackend?.rbq2a_result?.insistence_on_sameness_mean
+                    ?: (itemsRutinas.sumOf { respuestasRbq2a[it] ?: 2 }.toDouble() / itemsRutinas.size)
+                val rbqMotor = responseBackend?.rbq2a_result?.repetitive_motor_mean
+                    ?: (itemsMotor.sumOf { respuestasRbq2a[it] ?: 2 }.toDouble() / itemsMotor.size)
+                val rbqMedia = responseBackend?.rbq2a_result?.total_mean
+                    ?: ((rbqRut * itemsRutinas.size + rbqMotor * itemsMotor.size) / 20.0)
+
+                val resumen = "CAT-Q Total: $catqTotal/175 | RBQ-2A Media: ${"%.2f".format(java.util.Locale.US, rbqMedia)}"
+
+                val registro = ScreeningResultadoSupabase(
+                    id_usuario = userId,
+                    catq_total = catqTotal,
+                    catq_compensacion = catqComp,
+                    catq_enmascaramiento = catqMasc,
+                    catq_asimilacion = catqAsim,
+                    rbq2a_media = rbqMedia,
+                    rbq2a_motor = rbqMotor,
+                    rbq2a_rutinas = rbqRut,
+                    resumen_orientacion = resumen
+                )
+
+                SupabaseConfig.client.from("screening_resultados").insert(registro)
+                Log.d("HabiTAR_Supabase", "✅ Resultados de screening guardados en Supabase para el usuario: $userId")
+            } else {
+                Log.d("HabiTAR_Supabase", "ℹ️ Usuario no autenticado en Supabase; resultado conservado en memoria local.")
+            }
+        } catch (e: Exception) {
+            Log.w("HabiTAR_Supabase", "⚠️ No se pudo guardar en Supabase (offline/error): ${e.message}")
+        }
+    }
+
+    private fun calcularCatqTotalLocal(): Int {
+        val itemsInversos = setOf(3, 12, 19, 22, 24)
+        var total = 0
+        for (i in 1..25) {
+            val resp = respuestasCatq[i] ?: 4
+            total += if (i in itemsInversos) (8 - resp) else resp
+        }
+        return total
+    }
+
+    private fun calcularCatqSubescalaLocal(items: List<Int>): Int {
+        val itemsInversos = setOf(3, 12, 19, 22, 24)
+        return items.sumOf { i ->
+            val resp = respuestasCatq[i] ?: 4
+            if (i in itemsInversos) (8 - resp) else resp
         }
     }
 

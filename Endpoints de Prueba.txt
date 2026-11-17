@@ -1,0 +1,36 @@
+Endpoint 1: POST /api/v1/screening/Process
+
+{
+  "user_id": "USR-001",
+  "catq": {
+    "answers": {
+      "1": 5, "2": 4, "3": 2, "4": 6, "5": 5,
+      "6": 3, "7": 4, "8": 6, "9": 3, "10": 5,
+      "11": 5, "12": 2, "13": 4, "14": 6, "15": 3,
+      "16": 4, "17": 5, "18": 4, "19": 2, "20": 6,
+      "21": 4, "22": 3, "23": 5, "24": 2, "25": 4
+    }
+  },
+  "rbq2a": {
+    "answers": {
+      "1": 2, "2": 1, "3": 3, "4": 2, "5": 1,
+      "6": 2, "7": 3, "8": 1, "9": 2, "10": 3,
+      "11": 2, "12": 3, "13": 2, "14": 2, "15": 3,
+      "16": 2, "17": 2, "18": 3, "19": 2, "20": 2
+    }
+  }
+}
+
+Endpoint 2: POST /api/v1/orientation/generate
+
+{
+  "query": "¿Qué estrategias prácticas me recomiendas para manejar la sobrecarga por ruido y cambios de horario en la universidad?",
+  "user_profile": {
+    "arquetipo": "El Creativo Sensorial",
+    "necesidades_ux": ["Control de sonido", "Anticipación de cambios"],
+    "estresores": ["Sonidos inesperados", "Interfaces saturadas"]
+  },
+  "screening_summary": "CAT-Q total 118/175, RBQ-2A media 2.15",
+  "top_k": 3
+}
+
