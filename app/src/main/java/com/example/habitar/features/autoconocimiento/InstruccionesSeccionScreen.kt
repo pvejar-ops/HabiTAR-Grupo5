@@ -32,8 +32,8 @@ fun InstruccionesSeccionScreen(
     val colorBordeCard = Color(0xFFE2E4F0)
 
     // Datos dinámicos según la sección elegida
-    val (tituloHeader, tituloHero, iconoHero, opcionesEscala) = when (idSeccion) {
-        1 -> Quadruple(
+    val (tituloHeader, tituloHero, iconoHero, opcionesEscala, nombreTest, detallePreguntas) = when (idSeccion) {
+        1 -> Sextuple(
             "Cómo me relaciono",
             "Sobre cómo te relacionas",
             "😌",
@@ -41,9 +41,11 @@ fun InstruccionesSeccionScreen(
                 Pair(1, "Totalmente en desacuerdo"),
                 Pair(4, "Punto neutro / término medio"),
                 Pair(7, "Totalmente de acuerdo")
-            )
+            ),
+            "Cuestionario CAT-Q (Camuflaje Social)",
+            "25 preguntas • Aprox. 4 minutos"
         )
-        else -> Quadruple(
+        else -> Sextuple(
             "Rutinas e intereses",
             "Sobre tus rutinas e intereses",
             "🔄",
@@ -51,7 +53,9 @@ fun InstruccionesSeccionScreen(
                 Pair(1, "Nunca o casi nunca"),
                 Pair(2, "A veces"),
                 Pair(3, "Con frecuencia")
-            )
+            ),
+            "Cuestionario RBQ-2A (Rutinas e Intereses)",
+            "20 preguntas • Aprox. 3 minutos"
         )
     }
 
@@ -111,19 +115,19 @@ fun InstruccionesSeccionScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(140.dp)
+                    .height(130.dp)
                     .background(color = colorHero, shape = RoundedCornerShape(22.dp)),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = iconoHero,
-                    fontSize = 52.sp
+                    fontSize = 50.sp
                 )
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
-            // --- 2. TÍTULO Y DESCRIPCIÓN ---
+            // --- 2. TÍTULO Y BADGES CLÍNICOS (Feedback Erwin) ---
             Text(
                 text = tituloHero,
                 fontSize = 22.sp,
@@ -132,18 +136,54 @@ fun InstruccionesSeccionScreen(
                 modifier = Modifier.fillMaxWidth()
             )
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Pastillitas informativas: Test y Cantidad de preguntas
+            Column(
+                verticalArrangement = Arrangement.spacedBy(6.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .background(color = Color(0xFFEDE9FE), shape = RoundedCornerShape(8.dp))
+                        .padding(horizontal = 10.dp, vertical = 4.dp)
+                ) {
+                    Text(
+                        text = "📋 $nombreTest",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color(0xFF5E72E4)
+                    )
+                }
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .background(color = Color(0xFFE2E8F0), shape = RoundedCornerShape(8.dp))
+                        .padding(horizontal = 10.dp, vertical = 4.dp)
+                ) {
+                    Text(
+                        text = "⏱️ $detallePreguntas",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = Color(0xFF475569)
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(14.dp))
 
             Text(
                 text = "Leerás frases sobre cosas que algunas personas hacen o sienten. Elige qué tan seguido te pasan a ti.",
-                fontSize = 15.sp,
+                fontSize = 14.sp,
                 fontWeight = FontWeight.Normal,
                 color = Color(0xFF4A4A58),
-                lineHeight = 22.sp,
+                lineHeight = 20.sp,
                 modifier = Modifier.fillMaxWidth()
             )
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(18.dp))
 
             // --- 3. TARJETA: CÓMO RESPONDER (PREVIA DE LA ESCALA) ---
             Card(
@@ -222,14 +262,14 @@ fun InstruccionesSeccionScreen(
             // --- 4. TEXTO TRANQUILIZADOR ---
             Text(
                 text = "No hay respuestas buenas ni malas. Si dudas, elige la que más se acerque.",
-                fontSize = 14.sp,
+                fontSize = 13.sp,
                 color = Color(0xFF6B7280),
-                lineHeight = 20.sp,
+                lineHeight = 18.sp,
                 modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(modifier = Modifier.weight(1f, fill = false))
-            Spacer(modifier = Modifier.height(30.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
             // --- 5. BOTÓN EMPEZAR SECCIÓN ---
             Button(
@@ -256,5 +296,12 @@ fun InstruccionesSeccionScreen(
     }
 }
 
-// Clase auxiliar para agrupar los 4 datos de la sección
-private data class Quadruple<A, B, C, D>(val first: A, val second: B, val third: C, val fourth: D)
+// Clase auxiliar para agrupar los 6 datos de la sección
+private data class Sextuple<A, B, C, D, E, F>(
+    val first: A,
+    val second: B,
+    val third: C,
+    val fourth: D,
+    val fifth: E,
+    val sixth: F
+)

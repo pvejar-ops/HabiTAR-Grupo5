@@ -130,7 +130,7 @@ fun PreguntaScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Indicador de Progreso con Bolitas (AHORA CLICKEABLES)
+            // Indicador de Progreso con Bolitas (Clickeables)
             LazyRow(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
@@ -304,7 +304,7 @@ fun PreguntaScreen(
             }
         }
 
-        // BottomSheet S07: Ayuda
+        // BottomSheet S07: Ayuda Contextual Única por Pregunta
         if (viewModel.mostrarAyudaBottomSheet) {
             ModalBottomSheet(
                 onDismissRequest = { viewModel.setAyudaVisible(false) },
@@ -326,11 +326,7 @@ fun PreguntaScreen(
 
                     Spacer(modifier = Modifier.height(12.dp))
 
-                    val textoExplicacion = if (idSeccion == 1) {
-                        "Describe el esfuerzo consciente por adaptar tu conducta social. Por ejemplo: ensayar antes qué decir al saludar a un profesor, o prestar atención activa a mirar a los ojos para que la otra persona no se sienta incómoda."
-                    } else {
-                        "Se refiere a rutinas, hábitos o intereses absorbentes en tu vida diaria. Por ejemplo: preferir sentarte siempre en el mismo banco de la sala de clases, o investigar a fondo un tema hasta saber cada detalle."
-                    }
+                    val textoExplicacion = obtenerExplicacionPregunta(idSeccion, idPreguntaActual)
 
                     Text(
                         text = textoExplicacion,
@@ -357,6 +353,59 @@ fun PreguntaScreen(
                     }
                 }
             }
+        }
+    }
+}
+
+/**
+ * Mapeo clínico contextual de cada pregunta del screening
+ * con ejemplos de la vida universitaria cotidiana.
+ */
+private fun obtenerExplicacionPregunta(idSeccion: Int, numeroPregunta: Int): String {
+    if (idSeccion == 1) {
+        // CAT-Q (Preguntas 1 a 25)
+        return when (numeroPregunta) {
+            1 -> "Monitoreo corporal: Por ejemplo, controlar conscientemente si estás sonriendo, dónde pones las manos o si tu postura se ve 'normal' frente a otros."
+            2 -> "Contacto visual forzado: Mirar a los ojos porque sabes que es una norma social esperada, aunque te resulte incómodo, cansador o te cueste concentrarte."
+            3 -> "Guiones mentales previos: Ensayar mentalmente frases exactas, bromas o preguntas antes de entrar a clases, hacer un trámite o saludar a alguien."
+            4 -> "Imitación de conductas: Copiar los gestos, tono de voz o modismos de tus compañeros para encajar mejor en el grupo."
+            5 -> "Sobreesfuerzo social: Sentir que relacionarte con otros requiere tanta concentración y energía como rendir un examen difícil."
+            6 -> "Control de impulsos de movimiento: Esconder o reprimir movimientos como mover los pies, balancearte o tocar objetos para no llamar la atención."
+            7 -> "Monitoreo del tono de voz: Regular conscientemente el volumen, velocidad o entonación al hablar para sonar empático o interesado."
+            8 -> "Aprender reglas sociales como teoría: Sentir que las interacciones no salen naturales, sino que las has aprendido leyendo, observando o cometiendo errores."
+            9 -> "Fatiga por interacción: Terminar el día con agotamiento extremo o dolor de cabeza tras haber estado en grupos, necesitando silencio absoluto."
+            10 -> "Desconexión entre lo interno y lo externo: Sentirte ansioso, abrumado o molesto por dentro, pero mantener una cara neutral o sonriente por fuera."
+            11 -> "Seguir conversaciones por cortesía: Prestar atención deliberada a cuándo te toca hablar o asentir para que no se note que te perdiste."
+            12 -> "Preparar temas de conversación: Investigar sobre música, series o fútbol solo para tener de qué hablar en los recreos o reuniones."
+            13 -> "Camuflaje de dificultades: Disimular que te molestan los ruidos o las luces de la sala de clases para no parecer 'exagerado/a'."
+            14 -> "Necesidad de recuperación solitaria: Requerir horas a solas sin hablar con nadie después de un evento social, carrete o trabajo grupal."
+            15 -> "Sensación de actuar un personaje: Sentir que te pones una 'máscara' adaptada a cada grupo de personas con las que estás."
+            16 -> "Dificultad con la espontaneidad: Preferir que las interacciones tengan un objetivo claro (ej. trabajo académico) antes que una charla informal libre."
+            17 -> "Autoobservación constante: Juzgarte mentalmente mientras hablas: '¿sonó raro lo que dije?', '¿estoy hablando muy rápido?'."
+            18 -> "Imitación de expresiones: Practicar sonrisas, caras de sorpresa o asentimientos frente al espejo o mentalmente."
+            19 -> "Incomodidad con charlas casuales ('small talk'): Costarte hablar del clima o de temas superficiales, prefiriendo temas profundos o directos."
+            20 -> "Uso de intermediarios sociales: Preferir salir en grupo con un amigo de confianza que lleve la conversación para no tener que iniciarla tú."
+            21 -> "Fingir interés por empatía o armonía: Asentir y sonreír ante lo que te cuentan, aunque por dentro no comprendas por qué les resulta importante, para no incomodar."
+            22 -> "Ocultar intereses especiales: Evitar hablar de lo que verdaderamente te apasiona por miedo a que los demás piensen que eres intenso/a o aburrido/a."
+            23 -> "Estrategias de salida social: Planificar excusas de antemano para poder retirarte de reuniones o fiestas cuando tu batería social se agote."
+            24 -> "Sensación de aislamiento pese a integrarte: Sentir que la gente conoce la versión adaptada de ti, pero no tu forma de ser más auténtica."
+            25 -> "Monitoreo de la distancia física: Pensar si estás parado demasiado cerca o lejos de la otra persona durante una conversación."
+            else -> "Describe el esfuerzo consciente por adaptar tu conducta y lenguaje en contextos sociales cotidianos."
+        }
+    } else {
+        // RBQ-2A (Preguntas 1 a 10)
+        return when (numeroPregunta) {
+            1 -> "Movimientos repetitivos corporales: Balanceo del tronco, aleteo de manos o caminar en puntillas cuando estás concentrado, ansioso o feliz."
+            2 -> "Manipulación repetitiva de objetos: Girar tapas, hacer clic al lápiz, enrollar cables o manipular texturas de forma reiterada."
+            3 -> "Interés sensorial específico: Fascinación por mirar luces que titilan, tocar telas suaves o escuchar el mismo sonido repetidas veces."
+            4 -> "Adherencia estricta a rutinas: Sentir malestar notable si cambia el orden habitual en que te preparas por la mañana o el trayecto a la universidad."
+            5 -> "Necesidad de previsibilidad: Preferir saber con anticipación exacta la hora, el lugar y quiénes asistirán a una actividad antes de ir."
+            6 -> "Insistencia en el orden o simetría: Necesitar que tus apuntes, escritorio o cosas personales estén ordenadas bajo un criterio muy específico."
+            7 -> "Intereses hiperfocalizados: Investigar un tema en profundidad durante horas seguidas, olvidando comer o dormir por la alta concentración."
+            8 -> "Resistencia a cambios repentinos: Irritación o bloqueo si un profesor cancela una clase a última hora o si cambian las instrucciones de una entrega."
+            9 -> "Repetición verbal o de sonidos (ecolalia): Repetir palabras, frases de películas o melodías en tu mente o en voz baja como mecanismo de calma."
+            10 -> "Apego a objetos específicos: Llevar siempre el mismo objeto de apoyo (un llavero, auricular, prenda de ropa) que te brinde seguridad y calma."
+            else -> "Se refiere a patrones de rutina, preferencias sensoriales o intereses profundos en tu vida diaria."
         }
     }
 }

@@ -33,6 +33,7 @@ fun ConsentimientoScreen(
     // Estados de las dos casillas
     var checkOrientacion by remember { mutableStateOf(false) }
     var checkAnonimo by remember { mutableStateOf(false) }
+    var mostrarDialogoPrivacidad by remember { mutableStateOf(false) }
 
     // El botón se habilita únicamente si ambas están seleccionadas
     val botonHabilitado = checkOrientacion && checkAnonimo
@@ -216,7 +217,7 @@ fun ConsentimientoScreen(
                 modifier = Modifier
                     .padding(start = 12.dp)
                     .clickable {
-                        // Informativo
+                        mostrarDialogoPrivacidad = true
                     }
             )
 
@@ -265,5 +266,68 @@ fun ConsentimientoScreen(
 
             Spacer(modifier = Modifier.height(12.dp))
         }
+    }
+
+    // --- DIÁLOGO MODAL: PRIVACIDAD Y LEY 21.719 ---
+    if (mostrarDialogoPrivacidad) {
+        AlertDialog(
+            onDismissRequest = { mostrarDialogoPrivacidad = false },
+            title = {
+                Text(
+                    text = "Privacidad y Protección de Datos",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF1E1B26)
+                )
+            },
+            text = {
+                Column(
+                    modifier = Modifier.verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    Text(
+                        text = "Marco Ético y Legal (Ley N° 21.719):",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 13.sp,
+                        color = colorPrimario
+                    )
+                    Text(
+                        text = "• Anonimización estricta: Tus respuestas se guardan con un identificador técnico aleatorio (UUID), completamente desvinculado de tu nombre, RUT o correo.",
+                        fontSize = 13.sp,
+                        color = Color(0xFF4A4A58),
+                        lineHeight = 18.sp
+                    )
+                    Text(
+                        text = "• Confidencialidad total: Nadie de tu universidad ni terceros tiene acceso a tus resultados.",
+                        fontSize = 13.sp,
+                        color = Color(0xFF4A4A58),
+                        lineHeight = 18.sp
+                    )
+                    Text(
+                        text = "• Control y Derecho al Olvido: Puedes eliminar tus respuestas de la base de datos cuando quieras reiniciando el test.",
+                        fontSize = 13.sp,
+                        color = Color(0xFF4A4A58),
+                        lineHeight = 18.sp
+                    )
+                    Text(
+                        text = "• Cero Diagnóstico: La aplicación no realiza diagnósticos clínicos ni toma decisiones automáticas sobre ti.",
+                        fontSize = 13.sp,
+                        color = Color(0xFF4A4A58),
+                        lineHeight = 18.sp
+                    )
+                }
+            },
+            confirmButton = {
+                Button(
+                    onClick = { mostrarDialogoPrivacidad = false },
+                    colors = ButtonDefaults.buttonColors(containerColor = colorPrimario),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Text("Entendido", color = Color.White, fontWeight = FontWeight.Bold)
+                }
+            },
+            shape = RoundedCornerShape(20.dp),
+            containerColor = Color.White
+        )
     }
 }
