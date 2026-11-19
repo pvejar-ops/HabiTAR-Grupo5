@@ -10,6 +10,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -126,11 +127,16 @@ fun ResultadosScreen(
                         color = Color.White,
                         fontSize = 17.sp,
                         fontWeight = FontWeight.SemiBold,
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(end = 48.dp),
+                        modifier = Modifier.weight(1f),
                         textAlign = TextAlign.Center
                     )
+                    IconButton(onClick = { mostrarDialogoReiniciar = true }) {
+                        Icon(
+                            imageVector = Icons.Default.Refresh,
+                            contentDescription = "Reiniciar cuestionario",
+                            tint = Color.White
+                        )
+                    }
                 }
             }
 
@@ -242,26 +248,34 @@ fun ResultadosScreen(
                 }
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
-            // Botón: Volver a hacer el cuestionario (Borrar respuestas)
-            Box(
-                modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.Center
+            // Botón destacado: Volver a hacer el cuestionario
+            OutlinedButton(
+                onClick = { mostrarDialogoReiniciar = true },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp),
+                shape = RoundedCornerShape(24.dp),
+                border = BorderStroke(1.dp, Color(0xFFE53935).copy(alpha = 0.5f)),
+                colors = ButtonDefaults.outlinedButtonColors(
+                    contentColor = Color(0xFFE53935)
+                )
             ) {
+                Icon(
+                    imageVector = Icons.Default.Refresh,
+                    contentDescription = null,
+                    modifier = Modifier.size(18.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "Volver a realizar el cuestionario (Borrar respuestas)",
-                    color = Color(0xFFE53935),
+                    text = "Volver a realizar el cuestionario",
                     fontSize = 13.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(8.dp))
-                        .clickable { mostrarDialogoReiniciar = true }
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                    fontWeight = FontWeight.SemiBold
                 )
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(40.dp))
         }
 
         // Diálogo ético de confirmación
